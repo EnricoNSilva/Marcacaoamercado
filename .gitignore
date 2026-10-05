@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Planilhas geradas pelo simulacao.py
+*.xlsx
+~$*
+
+# Editores / SO
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini
+.DS_Store
