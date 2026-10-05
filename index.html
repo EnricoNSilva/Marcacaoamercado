@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Simulador Tesouro RendA+ 2065 | Análise de Carrego & Marcação a Mercado</title>
+<title>Simulador Tesouro RENDA+ 2065 | Análise de Carrego & Marcação a Mercado</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <style>
   /* ==========================================================================
@@ -68,69 +68,69 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 16px 40px 16px;
+    padding: 0 16px 24px 16px;
     min-width: 0;
   }
 
-  /* HEADER & BRANDING */
+  /* HEADER & BRANDING COMPACTO (ECONOMIA DE ESPAÇO VERTICAL) */
   header.app-header {
     background: linear-gradient(180deg, #162035 0%, var(--bg-base) 100%);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 24px 0 20px 0;
-    margin-bottom: 24px;
+    padding: 12px 0 10px 0;
+    margin-bottom: 14px;
   }
   .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
   }
   .header-titles h1 {
-    font-size: 20px;
+    font-size: 16px;
     font-weight: 700;
     color: #fff;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
   }
   .header-titles h1 .badge-title {
-    font-size: 11px;
+    font-size: 10px;
     background: var(--brand-glow);
     color: #60a5fa;
     border: 1px solid rgba(96, 165, 250, 0.3);
-    padding: 2px 8px;
+    padding: 1px 7px;
     border-radius: 999px;
     font-weight: 600;
   }
   .header-titles p {
-    font-size: 12.5px;
-    color: var(--text-secondary);
-    margin-top: 4px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 1px;
   }
   .header-quick-stats {
     display: flex;
-    gap: 12px;
+    gap: 8px;
   }
   .quick-stat {
     background: var(--bg-surface);
     border: 1px solid var(--border-subtle);
     border-radius: var(--radius-sm);
-    padding: 6px 12px;
+    padding: 4px 10px;
     text-align: right;
   }
-  .quick-stat .lbl { font-size: 11px; color: var(--text-muted); }
-  .quick-stat .val { font-size: 13.5px; font-weight: 700; color: #fff; }
+  .quick-stat .lbl { font-size: 10px; color: var(--text-muted); }
+  .quick-stat .val { font-size: 12.5px; font-weight: 700; color: #fff; }
 
   /* NAVEGAÇÃO POR ABAS (PROGRESSIVE DISCLOSURE) */
   nav.app-tabs {
     display: flex;
-    gap: 6px;
+    gap: 5px;
     background: var(--bg-surface);
-    padding: 4px;
+    padding: 3px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -139,12 +139,12 @@
   
   .tab-button {
     flex: 1;
-    min-width: 140px;
+    min-width: 125px;
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 10px 14px;
-    font-size: 13px;
+    padding: 8px 12px;
+    font-size: 12.5px;
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
@@ -537,7 +537,7 @@
     <div class="header-content">
       <div class="header-titles">
         <h1>
-          Tesouro RendA+ 2065
+          Tesouro RENDA+ 2065
           <span class="badge-title">NTN-B1 · 240 Parcelas</span>
         </h1>
         <p>Simulador inteligente de Marcação a Mercado, Carrego e Tributação Regressiva</p>
@@ -890,7 +890,7 @@
       </div>
 
       <div class="callout warning" style="margin-top:20px">
-        <strong>Metodologia do Título NTN-B1 (RendA+ 2065):</strong>
+        <strong>Metodologia do Título NTN-B1 (RENDA+ 2065):</strong>
         <p>1. O título amortiza em 240 parcelas mensais iguais entre 15/01/2065 e 15/12/2084.</p>
         <p>2. Preço de Mercado: <code>PU = F(t) × Σ (1 + r)^(-du/252)</code>, onde <code>du</code> são dias úteis seguindo o calendário oficial de feriados nacionais da ANBIMA.</p>
         <p>3. Imposto de Renda: Tabela Regressiva da Renda Fixa aplicada individualmente sobre o ganho de capital de cada lote (PEPS).</p>
