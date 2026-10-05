@@ -10,175 +10,209 @@
     --bg:#0f141c; --card:#171e29; --card2:#1d2633; --line:#2a3546; --txt:#e6ebf2; --mut:#8fa0b6;
     --acc:#4f8cff; --pos:#2ecc71; --neg:#ff5c5c; --warn:#f5b041; --hdr:#1b2a55;
   }
-  *{box-sizing:border-box}
-  body{margin:0;font-family:Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px}
-  header{padding:18px 24px;background:linear-gradient(90deg,#1b2a55,#14203f);border-bottom:1px solid var(--line)}
-  header h1{margin:0;font-size:20px}
-  header p{margin:4px 0 0;color:var(--mut);font-size:13px}
-  main{max-width:1280px;margin:0 auto;padding:18px;display:grid;gap:18px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
-  .card h2{margin:0 0 4px;font-size:16px}
-  .card .sub{color:var(--mut);font-size:12.5px;margin:0 0 12px}
-  .grid{display:grid;gap:12px}
-  .g2{grid-template-columns:1fr 1fr} .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)}
-  @media(max-width:900px){.g2,.g3,.g4{grid-template-columns:1fr}}
-  label{display:block;color:var(--mut);font-size:12px;margin-bottom:4px}
-  input,select{width:100%;background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:6px;padding:7px 9px;font-size:14px}
-  input:focus,select:focus{outline:1px solid var(--acc)}
-  input[type=range]{padding:0;accent-color:var(--acc)}
-  button{background:var(--acc);color:#fff;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;font-size:13px}
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{margin:0;width:100%;max-width:100%;overflow-x:hidden}
+  body{font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.45}
+  header{background:linear-gradient(90deg,#1b2a55,#14203f);border-bottom:1px solid var(--line)}
+  .wrap{max-width:1200px;margin:0 auto;width:100%;padding:0 20px}
+  header .wrap{padding-top:20px;padding-bottom:18px}
+  header h1{margin:0;font-size:21px;font-weight:650}
+  header p{margin:6px 0 0;color:var(--mut);font-size:13px}
+  main.wrap{display:grid;grid-template-columns:minmax(0,1fr);gap:20px;padding-top:20px;padding-bottom:40px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;min-width:0;width:100%}
+  .card h2{margin:0 0 6px;font-size:17px;font-weight:650}
+  .card .sub{color:var(--mut);font-size:13px;margin:0 0 16px}
+  .card h3{margin:0 0 10px;font-size:14px;color:#cfd8ea;font-weight:600}
+  .grid{display:grid;gap:14px 16px;min-width:0}
+  .auto{grid-template-columns:repeat(auto-fit,minmax(210px,1fr))}
+  .two{grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:22px}
+  @media(max-width:960px){.two{grid-template-columns:minmax(0,1fr)}}
+  .grid > *{min-width:0}
+  label{display:block;color:var(--mut);font-size:12.5px;margin-bottom:5px}
+  input,select{width:100%;max-width:100%;background:var(--card2);color:var(--txt);border:1px solid var(--line);border-radius:7px;padding:8px 10px;font-size:14px;font-family:inherit}
+  input:focus,select:focus{outline:2px solid rgba(79,140,255,.5);border-color:var(--acc)}
+  input[type=range]{padding:0;height:22px;background:transparent;border:0;accent-color:var(--acc)}
+  input[type=date]{color-scheme:dark}
+  button{background:var(--acc);color:#fff;border:0;border-radius:7px;padding:8px 13px;cursor:pointer;font-size:13px;font-family:inherit;white-space:nowrap}
+  button:hover{filter:brightness(1.1)}
   button.sec{background:var(--card2);border:1px solid var(--line);color:var(--txt)}
-  button.del{background:transparent;color:var(--neg);border:1px solid #5a2a2a;padding:4px 8px}
+  button.del{background:transparent;color:var(--neg);border:1px solid #5a2a2a;padding:5px 9px}
+  .scroll{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:9px}
   table{width:100%;border-collapse:collapse;font-size:13px}
-  th{background:var(--hdr);color:#cfd8ea;font-weight:600;text-align:right;padding:8px;white-space:nowrap}
-  td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  th{background:var(--hdr);color:#cfd8ea;font-weight:600;text-align:right;padding:9px 10px;white-space:nowrap}
+  td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+  tr:last-child td{border-bottom:0}
   th:first-child,td:first-child{text-align:left}
   tr.total td{font-weight:700;background:var(--card2)}
-  td input{padding:5px 6px;font-size:13px;min-width:90px}
+  #lotsTable td input{padding:6px 8px;font-size:13px;width:130px}
+  #lotsTable td input[type=date]{width:150px}
   .small{font-size:11.5px;color:var(--mut)}
   .pos{color:var(--pos)} .neg{color:var(--neg)} .warn{color:var(--warn)}
-  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
-  .kpi{background:var(--card2);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
-  .kpi .l{color:var(--mut);font-size:12px} .kpi .v{font-size:18px;font-weight:700;margin-top:3px} .kpi .s{font-size:12px;color:var(--mut);margin-top:2px}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+  .kpi{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:11px 13px;min-width:0}
+  .kpi .l{color:var(--mut);font-size:12px} .kpi .v{font-size:18px;font-weight:700;margin-top:3px;overflow-wrap:anywhere} .kpi .s{font-size:12px;color:var(--mut);margin-top:2px}
   .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-  .scroll{overflow-x:auto}
   .mx td{text-align:center} .mx td:first-child{text-align:left}
-  .mx .cell{border-radius:6px;padding:6px 4px}
-  .note{background:#1f2a1f;border:1px solid #2f4a2f;color:#cfe8cf;padding:10px 12px;border-radius:8px;font-size:12.5px}
-  .alert{background:#2e2615;border:1px solid #5c4a1f;color:#f3e2b8;padding:10px 12px;border-radius:8px;font-size:12.5px}
+  .mx .cell{border-radius:6px;padding:6px 6px}
+  .note{background:#1a2a20;border:1px solid #2f4a2f;color:#d3ead3;padding:11px 13px;border-radius:9px;font-size:13px;overflow-wrap:anywhere}
+  .alert{background:#2e2615;border:1px solid #5c4a1f;color:#f3e2b8;padding:11px 13px;border-radius:9px;font-size:13px}
   details summary{cursor:pointer;color:var(--acc)}
-  .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:2px 8px;font-size:12px;color:var(--mut)}
-  .chartbox{position:relative;height:380px}
+  .pill{display:inline-block;background:var(--card2);border:1px solid var(--line);border-radius:999px;padding:1px 8px;font-size:11.5px;color:var(--mut)}
+  .chartbox{position:relative;height:400px;width:100%}
+  .chartbox.sm{height:180px}
+  .slider{background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:10px 12px}
+  .slider .top{display:flex;justify-content:space-between;align-items:center;gap:10px}
+  .slider .top label{margin:0}
+  .slider .top input[type=number]{width:96px;padding:5px 8px;text-align:right}
+  .slider .scale{display:flex;justify-content:space-between;font-size:11px;color:var(--mut)}
+  .stack{display:grid;gap:12px}
+  code{background:var(--card2);padding:1px 5px;border-radius:4px}
 </style>
 </head>
 <body>
-<header>
+<header><div class="wrap">
   <h1>Simulador Tesouro RendA+ 2065 — marcação a mercado e carrego</h1>
-  <p>240 parcelas mensais (jan/2065 a dez/2084) · preço = Σ parcelas descontadas a IPCA + taxa real (du/252, calendário ANBIMA) · dados salvos no seu navegador</p>
-</header>
-<main>
+  <p>240 parcelas mensais (jan/2065 a dez/2084) · PU = Σ parcelas descontadas a IPCA + taxa real (du/252, calendário ANBIMA) · dados salvos no seu navegador</p>
+</div></header>
 
-<!-- PARÂMETROS -->
+<main class="wrap">
+
+<!-- 1. MERCADO HOJE -->
 <section class="card">
-  <h2>1. Mercado hoje e premissas</h2>
-  <p class="sub">Pegue no site/app do Tesouro o <b>preço de resgate</b> e/ou a <b>taxa de resgate</b> atuais do RendA+ 2065. Se informar só um, o outro é calculado.</p>
-  <div class="grid g4">
-    <div><label>Data de referência (hoje)</label><input type="date" id="refDate"></div>
-    <div><label>Preço unitário de resgate atual (R$)</label><input type="number" step="0.01" id="refPrice" placeholder="ex: 269,82"></div>
-    <div><label>Taxa de resgate atual (IPCA + % a.a.) — opcional</label><input type="number" step="0.01" id="refRate" placeholder="calculada se vazio"></div>
-    <div><label>IPCA projetado (% a.a.)</label><input type="number" step="0.1" id="ipca"></div>
+  <h2>1. Mercado hoje e custos</h2>
+  <p class="sub">Pegue no app do Tesouro o <b>preço unitário de resgate</b> (= valor bruto ÷ quantidade). Se souber a <b>taxa de resgate</b>, informe também: o modelo fica exato.</p>
+  <div class="grid auto">
+    <div><label>Data de referência (hoje)</label><input type="date" data-k="refDate"></div>
+    <div><label>PU de resgate atual (R$)</label><input type="number" step="0.01" data-k="refPrice"></div>
+    <div><label>Taxa de resgate atual (IPCA + % a.a.)</label><input type="number" step="0.01" data-k="refRate" placeholder="opcional — estimada"></div>
+    <div><label>IPCA desde a última compra (% a.a.) <span class="small">— só usado se a taxa estiver vazia</span></label><input type="number" step="0.1" data-k="ipcaCal"></div>
   </div>
-  <div class="grid g4" style="margin-top:12px">
+  <div class="grid auto" style="margin-top:14px">
     <div><label>Taxa de custódia B3 na venda antecipada</label>
-      <select id="custMode"><option value="none">Não considerar (como no app)</option><option value="tiers">Considerar (escalonada abaixo)</option></select></div>
-    <div><label>Custódia: 0–10 anos (% a.a.)</label><input type="number" step="0.01" id="cust1"></div>
-    <div><label>Custódia: 10–20 anos (% a.a.)</label><input type="number" step="0.01" id="cust2"></div>
-    <div><label>Custódia: &gt; 20 anos (% a.a.)</label><input type="number" step="0.01" id="cust3"></div>
+      <select data-k="custMode">
+        <option value="single">Alíquota da faixa do tempo total, pro rata die</option>
+        <option value="marginal">Escalonada por faixa (marginal), pro rata die</option>
+        <option value="none">Não considerar</option>
+      </select></div>
+    <div><label>Até 10 anos (% a.a.)</label><input type="number" step="0.01" data-k="cust1"></div>
+    <div><label>De 10 a 20 anos (% a.a.)</label><input type="number" step="0.01" data-k="cust2"></div>
+    <div><label>Acima de 20 anos (% a.a.)</label><input type="number" step="0.01" data-k="cust3"></div>
   </div>
-  <div id="calibInfo" style="margin-top:12px"></div>
+  <div id="calibInfo" style="margin-top:14px"></div>
 </section>
 
-<!-- COMPRAS -->
+<!-- 2. COMPRAS -->
 <section class="card">
   <h2>2. Minhas compras</h2>
-  <p class="sub">Edite, adicione ou remova lotes. Para <b>simular uma compra futura</b>, adicione uma linha com data e taxa e deixe o preço vazio — o preço é calculado pelo modelo.</p>
+  <p class="sub">Edite, adicione ou remova lotes. Para <b>simular uma compra futura</b>, adicione uma linha com data e taxa e deixe o preço vazio: o modelo calcula o preço.</p>
   <div class="scroll"><table id="lotsTable">
     <thead><tr><th>Data</th><th>Taxa (IPCA + %)</th><th>Preço (R$)</th><th>Quantidade</th><th>Preço usado</th><th>Valor da compra</th><th></th></tr></thead>
     <tbody></tbody>
   </table></div>
-  <div class="row" style="margin-top:10px">
+  <div class="row" style="margin-top:12px">
     <button id="addLot">+ Adicionar compra</button>
     <button class="sec" id="resetAll">Restaurar dados originais</button>
   </div>
 </section>
 
-<!-- POSIÇÃO HOJE -->
+<!-- 3. POSIÇÃO HOJE -->
 <section class="card">
   <h2>3. Posição hoje (se vender tudo na data de referência)</h2>
-  <p class="sub">Confira com o app do Tesouro: deve bater com o seu "Saldo bruto", "IR" e "Saldo líquido".</p>
+  <p class="sub">"Líquido (como no app)" deve bater com o app do Tesouro, que não desconta a custódia. "Líquido após custódia" é a estimativa do que entraria de fato na conta.</p>
   <div class="kpis" id="todayKpis"></div>
-  <div class="scroll" style="margin-top:12px"><table id="todayTable"></table></div>
+  <div class="scroll" style="margin-top:14px"><table id="todayTable"></table></div>
 </section>
 
-<!-- SIMULADOR -->
+<!-- 4. CENÁRIO + SIMULAÇÃO -->
 <section class="card">
-  <h2>4. Simular venda</h2>
-  <p class="sub">Escolha quando vender, a taxa de mercado nesse dia e a quantidade. A venda segue PEPS (lotes mais antigos primeiro) e o IR é regressivo por lote.</p>
-  <div class="grid g3">
-    <div>
-      <label>Vender em: <b id="simDateLbl"></b></label>
-      <input type="range" id="simYears" min="0" max="38" step="0.0833333">
-      <div class="row" style="margin-top:6px"><input type="date" id="simDate" style="max-width:180px"><span class="small" id="simYearsLbl"></span></div>
-    </div>
-    <div>
-      <label>Taxa de mercado na venda (IPCA + % a.a.): <b id="simRateLbl"></b></label>
-      <input type="range" id="simRateR" min="3" max="10" step="0.01">
-      <div class="row" style="margin-top:6px">
-        <input type="number" step="0.01" id="simRate" style="max-width:110px">
-        <button class="sec" id="btnRateNow">Taxa atual</button>
-        <button class="sec" id="btnRateAvg">Minha taxa média</button>
+  <h2>4. Cenário e simulação de venda</h2>
+  <p class="sub">A taxa de mercado sai da taxa atual e vai até a <b>taxa alvo</b> em linha reta ao longo de N meses (N = 0 é um choque imediato). Na venda, você recebe <b>taxa de mercado + spread</b>. Os gráficos e a matriz abaixo usam este mesmo cenário.</p>
+  <div class="grid two">
+    <div class="stack">
+      <div class="slider">
+        <div class="top"><label>IPCA projetado (% a.a.)</label><input type="number" step="0.1" data-k="ipca"></div>
+        <input type="range" min="2" max="10" step="0.1" data-k="ipca"><div class="scale"><span>2%</span><span>10%</span></div>
+      </div>
+      <div class="slider">
+        <div class="top"><label>Taxa real futura do RendA+ (alvo, IPCA + %)</label><input type="number" step="0.01" data-k="target"></div>
+        <input type="range" min="4" max="9" step="0.01" data-k="target"><div class="scale"><span>4%</span><span id="tgtNowLbl"></span><span>9%</span></div>
+      </div>
+      <div class="slider">
+        <div class="top"><label>Meses até a taxa chegar no alvo</label><input type="number" step="1" min="0" data-k="convMonths"></div>
+        <input type="range" min="0" max="120" step="1" data-k="convMonths"><div class="scale"><span>0 (imediato)</span><span>120</span></div>
+      </div>
+      <div class="slider">
+        <div class="top"><label>Spread compra/venda (p.p. somados à taxa na venda)</label><input type="number" step="0.01" min="0" data-k="spread"></div>
+        <input type="range" min="0" max="0.5" step="0.01" data-k="spread"><div class="scale"><span>0</span><span>0,50 p.p.</span></div>
+      </div>
+      <div class="slider">
+        <div class="top"><label>Vender em: <b id="simDateLbl"></b> <span class="small" id="simYearsLbl"></span></label><input type="date" data-k="simDate" style="width:150px"></div>
+        <input type="range" id="simYears" min="0" max="38" step="0.0833333">
+      </div>
+      <div class="slider">
+        <div class="top"><label>Quantidade a vender (<span id="qtyMaxLbl"></span> disponíveis)</label>
+          <div class="row"><input type="number" step="0.01" data-k="simQty" placeholder="tudo" style="width:96px"><button class="sec" id="btnQtyAll">Tudo</button></div></div>
+      </div>
+      <div class="row">
+        <button class="sec" id="btnTgtNow">Alvo = taxa atual</button>
+        <button class="sec" id="btnTgtAvg">Alvo = minha taxa média</button>
       </div>
     </div>
-    <div>
-      <label>Quantidade a vender (<span id="qtyMaxLbl"></span> disponíveis)</label>
-      <div class="row"><input type="number" step="0.01" id="simQty" style="max-width:140px"><button class="sec" id="btnQtyAll">Tudo</button></div>
+    <div class="stack">
+      <div class="kpis" id="simKpis"></div>
+      <div id="simDecomp"></div>
+      <div><h3>Trajetória da taxa de venda</h3><div class="chartbox sm"><canvas id="rateChart"></canvas></div></div>
     </div>
   </div>
-  <div class="kpis" id="simKpis" style="margin-top:14px"></div>
-  <div id="simDecomp" style="margin-top:12px"></div>
-  <div class="scroll" style="margin-top:12px"><table id="simTable"></table></div>
+  <div class="scroll" style="margin-top:16px"><table id="simTable"></table></div>
 </section>
 
-<!-- GRÁFICO -->
+<!-- 5. GRÁFICO -->
 <section class="card">
   <h2>5. Projeção do saldo no tempo</h2>
-  <p class="sub">Cada linha supõe que a taxa de mercado fique constante no valor indicado. "Carrego" = cada lote rendendo exatamente a taxa em que foi comprado (IPCA + taxa contratada).</p>
-  <div class="grid g4">
-    <div><label>Horizonte do gráfico (anos)</label><input type="number" id="chartYears" min="1" max="38" step="1"></div>
-    <div><label>Métrica</label><select id="chartMetric"><option value="liq">Saldo líquido (após IR/custódia)</option><option value="bruto">Saldo bruto</option></select></div>
-    <div><label>Valores</label><select id="chartReal"><option value="nom">Nominais (R$ do futuro)</option><option value="real">Reais (R$ de hoje, descontando IPCA)</option></select></div>
-    <div><label>Taxas das linhas (IPCA + %, separadas por ;)</label><input type="text" id="chartRates"></div>
+  <p class="sub">Cada linha mostra o saldo se você vendesse naquela data. As taxas listadas são alvos, com a mesma convergência e o mesmo spread do cenário. "Carrego" = cada lote rendendo exatamente a taxa contratada.</p>
+  <div class="grid auto">
+    <div><label>Horizonte (anos)</label><input type="number" min="1" max="38" step="1" data-k="chartYears"></div>
+    <div><label>Métrica</label><select data-k="chartMetric"><option value="liq">Saldo líquido (IR + custódia)</option><option value="bruto">Saldo bruto</option></select></div>
+    <div><label>Valores</label><select data-k="chartReal"><option value="nom">Nominais (R$ do futuro)</option><option value="real">Reais (R$ de hoje)</option></select></div>
+    <div><label>Taxas alvo extras (IPCA + %, separadas por ;)</label><input type="text" data-k="chartRates"></div>
   </div>
-  <div class="chartbox" style="margin-top:12px"><canvas id="chart"></canvas></div>
-  <div id="chartFallback" class="alert" style="display:none">Não foi possível carregar a biblioteca de gráficos (sem internet?). As tabelas continuam funcionando.</div>
+  <div class="chartbox" style="margin-top:14px"><canvas id="chart"></canvas></div>
+  <div id="chartFallback" class="alert" style="display:none">Não consegui carregar a biblioteca de gráficos (sem internet?). As tabelas continuam funcionando.</div>
 </section>
 
-<!-- MATRIZ -->
+<!-- 6. MATRIZ -->
 <section class="card">
-  <h2>6. Matriz de cenários — saldo líquido se vender tudo</h2>
-  <p class="sub">Linhas = taxa de mercado na venda; colunas = daqui a quanto tempo. Abaixo do valor: ganho sobre o total investido e diferença em relação a vender hoje.</p>
-  <div class="grid g2">
-    <div><label>Horizontes (anos, separados por ;)</label><input type="text" id="mxYears"></div>
-    <div><label>Taxas de mercado (IPCA + %, separadas por ;)</label><input type="text" id="mxRates"></div>
+  <h2>6. Matriz de cenários: saldo líquido se vender tudo</h2>
+  <p class="sub">Linhas = taxa alvo (com a convergência e o spread do cenário); colunas = data da venda. Abaixo de cada valor: ganho sobre o investido e diferença em relação a vender hoje. Passe o mouse para ver os detalhes.</p>
+  <div class="grid auto">
+    <div><label>Horizontes (anos, separados por ;)</label><input type="text" data-k="mxYears"></div>
+    <div><label>Taxas alvo (IPCA + %, separadas por ;)</label><input type="text" data-k="mxRates"></div>
   </div>
-  <div class="scroll" style="margin-top:12px"><table class="mx" id="mxTable"></table></div>
+  <div class="scroll" style="margin-top:14px"><table class="mx" id="mxTable"></table></div>
 </section>
 
-<!-- SENSIBILIDADE -->
+<!-- 7. SENSIBILIDADE -->
 <section class="card">
-  <h2>7. Sensibilidade hoje (choque instantâneo na taxa)</h2>
-  <p class="sub">Quanto o seu saldo bruto muda se a taxa de mercado se mover agora.</p>
+  <h2>7. Sensibilidade hoje (choque imediato na taxa de resgate)</h2>
   <div class="scroll"><table id="sensTable"></table></div>
-  <div id="durInfo" class="small" style="margin-top:8px"></div>
+  <div id="durInfo" class="small" style="margin-top:10px"></div>
 </section>
 
 <!-- METODOLOGIA -->
 <section class="card">
   <details>
     <summary>Metodologia, premissas e limitações</summary>
-    <div style="margin-top:10px;line-height:1.55;color:#cfd8ea">
-      <p><b>Fluxos:</b> o RendA+ 2065 paga 240 parcelas mensais de mesmo valor real no dia 15 (ou próximo dia útil) de jan/2065 a dez/2084.
-      O preço é <code>PU(t,r) = F(t) · Σ<sub>k</sub> (1+r)<sup>−du(t,T<sub>k</sub>)/252</sup></code>, em que <code>F(t)</code> é proporcional ao VNA (cresce com o IPCA)
-      e <code>du</code> são dias úteis (feriados nacionais/ANBIMA, incluindo Carnaval, Sexta-feira Santa, Corpus Christi e 20/11).</p>
-      <p><b>Calibração:</b> <code>F</code> na data de referência vem do preço e da taxa atuais (se você informar os dois). Senão, vem da compra mais recente, corrigida pelo IPCA projetado. Depois, <code>F</code> é projetado com o IPCA informado.
-      Comparar o <code>F</code> das suas compras mostra o IPCA implícito entre elas (ver caixa verde na seção 1), o que serve para validar o modelo.</p>
-      <p><b>Carrego × marcação:</b> com taxa constante, o PU cresce exatamente IPCA + taxa ao ano (não há cupons antes de 2065). O ganho total é a soma do
-      <i>carrego</i> (IPCA + sua taxa de compra) com o efeito de <i>marcação a mercado</i> (diferença entre a taxa de mercado na venda e a sua taxa de compra).</p>
-      <p><b>Impostos:</b> IR regressivo por lote (22,5% até 180 dias, 20% de 181 a 360, 17,5% de 361 a 720, 15% acima de 720 dias), aplicado sobre o rendimento menos IOF e custódia.
-      IOF regressivo para resgates com menos de 30 dias. Valores truncados em 2 casas, como faz o Tesouro.</p>
-      <p><b>Custódia B3:</b> no RendA+ ela é isenta para quem leva o título até o fim (com renda mensal de até 6 salários mínimos). Na venda antecipada há cobrança escalonada, que é configurável na seção 1 — <span class="warn">confirme as alíquotas vigentes no site do Tesouro</span>.
-      A estimativa usa a alíquota marginal por faixa de tempo aplicada ao valor médio (média logarítmica) entre a compra e a venda.</p>
-      <p><b>Limitações:</b> não considera o spread entre taxa de compra e de recompra, nem a defasagem exata do VNA mensal. O IPCA projetado é constante, e a projeção vale até a data de conversão (jan/2065). É uma simulação, não uma recomendação.</p>
+    <div style="margin-top:12px;line-height:1.6;color:#cfd8ea">
+      <p><b>Fluxos:</b> o RendA+ 2065 paga 240 parcelas mensais de mesmo valor real no dia 15 (ou no próximo dia útil), de jan/2065 a dez/2084.
+      <code>PU(t,r) = F(t) · Σ (1+r)^(−du(t,T_k)/252)</code>, em que <code>F(t)</code> acompanha o VNA (cresce com o IPCA) e <code>du</code> são dias úteis (feriados nacionais/ANBIMA).</p>
+      <p><b>Calibração:</b> se você informar o PU e a taxa de resgate de hoje, <code>F</code> sai exato. Só com o PU, <code>F</code> vem da última compra corrigida pelo "IPCA desde a última compra", e a taxa implícita é calculada a partir dele. O preço e o saldo bruto de hoje sempre batem com o PU informado.</p>
+      <p><b>Cenário:</b> a taxa de mercado é <code>r(t) = r₀ + (alvo − r₀)·min(1, meses/N)</code>, com <code>r₀ = taxa de resgate atual − spread</code>. A venda acontece a <code>r(t) + spread</code>, então hoje ela reproduz exatamente o PU de resgate informado. Compras simuladas (preço vazio) usam a taxa digitada no lote.</p>
+      <p><b>Carrego × marcação:</b> com a taxa constante, o PU cresce exatamente IPCA + taxa (não há cupons antes de 2065). Carrego = valor do lote à sua taxa de compra. Marcação = diferença entre esse valor e o valor de venda no cenário.</p>
+      <p><b>Custódia B3 na venda antecipada:</b> pro rata die sobre o valor bruto resgatado: <code>valor × alíquota × dias/365</code>. Há dois modos: alíquota da faixa do tempo total de aplicação (até 10 anos 0,50%; 10–20 anos 0,20%; mais de 20 anos 0,10%), ou escalonada, em que cada período paga a alíquota da sua faixa.
+      O app do Tesouro não mostra a custódia no "saldo líquido", por isso a seção 3 exibe os dois valores.</p>
+      <p><b>Impostos:</b> IR regressivo por lote (22,5% até 180 dias; 20% até 360; 17,5% até 720; 15% acima disso) sobre o rendimento descontados a custódia e o IOF. O IOF é regressivo para resgates com menos de 30 dias. Valores truncados em 2 casas. Vendas parciais seguem PEPS (os lotes mais antigos saem primeiro).</p>
+      <p><b>Limitações:</b> o IPCA é constante, a defasagem mensal do VNA é ignorada e a projeção vai até a conversão (jan/2065). É uma simulação, não uma recomendação.</p>
     </div>
   </details>
 </section>
@@ -187,20 +221,17 @@
 <script>
 /* ===================== CALENDÁRIO / DATAS ===================== */
 const DAY = 86400000;
-const toDN = s => { const [y,m,d] = s.split('-').map(Number); return Math.round(Date.UTC(y,m-1,d)/DAY); };
+const toDN = s => { if(!s) return NaN; const [y,m,d] = String(s).split('-').map(Number); return Math.round(Date.UTC(y,m-1,d)/DAY); };
 const ymdDN = (y,m,d) => Math.round(Date.UTC(y,m-1,d)/DAY);
 const isoDN = n => new Date(n*DAY).toISOString().slice(0,10);
 const fmtD = n => { const d = new Date(n*DAY); return String(d.getUTCDate()).padStart(2,'0')+'/'+String(d.getUTCMonth()+1).padStart(2,'0')+'/'+d.getUTCFullYear(); };
-const wd = n => new Date(n*DAY).getUTCDay(); // 0=dom 6=sab
-function addYearsDN(n, yrs){
-  const d = new Date(n*DAY), w = Math.floor(yrs), months = Math.round((yrs - w)*12);
-  return Math.round(Date.UTC(d.getUTCFullYear()+w, d.getUTCMonth()+months, d.getUTCDate())/DAY);
-}
+const wd = n => new Date(n*DAY).getUTCDay();
+function addMonthsDN(n, months){ const d = new Date(n*DAY); return Math.round(Date.UTC(d.getUTCFullYear(), d.getUTCMonth()+months, d.getUTCDate())/DAY); }
+const addYearsDN = (n, y) => addMonthsDN(n, Math.round(y*12));
 function easter(y){
   const a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3);
   const h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451);
-  const mo=Math.floor((h+l-7*m+114)/31), da=((h+l-7*m+114)%31)+1;
-  return ymdDN(y,mo,da);
+  return ymdDN(y, Math.floor((h+l-7*m+114)/31), ((h+l-7*m+114)%31)+1);
 }
 const CAL0 = ymdDN(2000,1,1), CAL1 = ymdDN(2090,12,31);
 const HOL = new Set();
@@ -211,81 +242,80 @@ for (let y=2000; y<=2090; y++){
 }
 const CUM = new Int32Array(CAL1-CAL0+2);
 for (let n=CAL0; n<=CAL1; n++){ const bd = wd(n)!==0 && wd(n)!==6 && !HOL.has(n); CUM[n-CAL0+1] = CUM[n-CAL0] + (bd?1:0); }
-const du = (a,b) => CUM[b-CAL0] - CUM[a-CAL0]; // dias úteis em [a, b)
+const du = (a,b) => CUM[b-CAL0] - CUM[a-CAL0];
 const nextBD = n => { while (wd(n)===0 || wd(n)===6 || HOL.has(n)) n++; return n; };
 
 /* ===================== MODELO DO TÍTULO ===================== */
 const FLOWS = []; for (let k=0;k<240;k++) FLOWS.push(nextBD(ymdDN(2065+Math.floor(k/12), (k%12)+1, 15)));
-const T1 = FLOWS[0];
-const DK = FLOWS.map(f => du(T1, f));
-const MAX_DN = T1 - 1;
+const T1 = FLOWS[0], DK = FLOWS.map(f => du(T1, f)), MAX_DN = T1 - 1;
 const sCache = new Map();
-function S(r){ const key = r.toFixed(9); let v = sCache.get(key); if (v===undefined){ v=0; for (const d of DK) v += Math.pow(1+r, -d/252); sCache.set(key,v); if (sCache.size>20000) sCache.clear(); } return v; }
+function S(r){ const key = r.toFixed(9); let v = sCache.get(key); if (v===undefined){ v=0; for (const d of DK) v += Math.pow(1+r, -d/252); if (sCache.size>50000) sCache.clear(); sCache.set(key,v); } return v; }
 const A = (t, r) => Math.pow(1+r, -du(t, T1)/252) * S(r);
-const trunc2 = x => Math.floor(x*100 + 1e-7)/100;
+const trunc2 = x => Math.floor(x*100 + 1e-6)/100;
 
-const M = { ref:0, Fref:0, ipca:0.045, rNow:0, pNow:0 };
+const M = { ref:0, Fref:0, ipca:0.045, rNow:0, pNow:0, spread:0, r0:0, target:0, conv:0 };
 function F(t){ return t >= M.ref ? M.Fref*Math.pow(1+M.ipca, du(M.ref,t)/252) : M.Fref/Math.pow(1+M.ipca, du(t,M.ref)/252); }
 const PU = (t, r) => trunc2(F(t) * A(t, r));
 const deflator = t => t>=M.ref ? Math.pow(1+M.ipca, du(M.ref,t)/252) : 1;
-function solveRate(t, price, Ft){
-  let lo=-0.05, hi=0.35;
-  for (let i=0;i<80;i++){ const m=(lo+hi)/2; if (Ft*A(t,m) > price) lo=m; else hi=m; }
-  return (lo+hi)/2;
-}
+function solveRate(t, price, Ft){ let lo=-0.05, hi=0.35; for (let i=0;i<80;i++){ const m=(lo+hi)/2; if (Ft*A(t,m) > price) lo=m; else hi=m; } return (lo+hi)/2; }
+// trajetória: taxa de mercado em t para um alvo
+const monthsFrom = t => (t - M.ref)/30.4375;
+function mktRate(t, target){ if (M.conv<=0) return t<=M.ref ? M.r0 : target; return M.r0 + (target - M.r0)*Math.min(1, Math.max(0, monthsFrom(t))/M.conv); }
+const sellRate = (t, target) => mktRate(t, target) + M.spread;
+// PU de venda: na data de referência e taxa atual, usa exatamente o PU informado
+const sellPU = (t, r) => (t===M.ref && Math.abs(r-M.rNow)<1e-10) ? M.pNow : PU(t, r);
 
 /* ===================== IMPOSTOS / CUSTÓDIA ===================== */
 const IOF = [96,93,90,86,83,80,76,73,70,66,63,60,56,53,50,46,43,40,36,33,30,26,23,20,16,13,10,6,3,0];
 const irRate = d => d<=180 ? 0.225 : d<=360 ? 0.20 : d<=720 ? 0.175 : 0.15;
 const iofRate = d => d>=30 ? 0 : IOF[Math.max(d,1)-1]/100;
-let CUST = { mode:'none', t:[0.005,0.002,0.001] };
-function custodyFee(v0, v1, days){
-  if (CUST.mode==='none' || days<=0) return 0;
-  const y = days/365.25;
-  const yrs = Math.min(y,10)*CUST.t[0] + Math.min(Math.max(y-10,0),10)*CUST.t[1] + Math.max(y-20,0)*CUST.t[2];
-  const avg = (v1>0 && v0>0 && Math.abs(v1-v0)>1e-9) ? (v1-v0)/Math.log(v1/v0) : (v0+v1)/2;
-  return trunc2(avg*yrs);
+let CUST = { mode:'single', t:[0.005,0.002,0.001] };
+const D10 = 3652.5, D20 = 7305;
+function custodyFee(valor, days){
+  if (CUST.mode==='none' || days<=0 || valor<=0) return 0;
+  let fator;
+  if (CUST.mode==='single'){ const a = days<=D10 ? CUST.t[0] : days<=D20 ? CUST.t[1] : CUST.t[2]; fator = a*days/365; }
+  else fator = (Math.min(days,D10)*CUST.t[0] + Math.min(Math.max(days-D10,0),D10)*CUST.t[1] + Math.max(days-D20,0)*CUST.t[2])/365;
+  return trunc2(valor*fator);
 }
-// venda de q unidades de um lote em t a taxa r
-function sellPart(lot, q, t, r, puOverride){
-  const pu = puOverride ?? PU(t, r);
+function sellPart(lot, q, t, pu){
   const bruto = trunc2(q*pu), custo = trunc2(q*lot.price), days = t - lot.dn;
-  const cust = custodyFee(custo, bruto, days);
+  const cust = custodyFee(bruto, days);
   const g0 = bruto - custo - cust;
   const iof = g0>0 ? trunc2(g0*iofRate(days)) : 0;
-  const base = g0 - iof;
-  const aliq = irRate(days);
+  const base = g0 - iof, aliq = irRate(days);
   const ir = base>0 ? trunc2(base*aliq) : 0;
-  return { q, pu, bruto, custo, days, cust, iof, ir, aliq, liq: bruto-cust-iof-ir };
+  return { q, pu, bruto, custo, days, cust, iof, ir, aliq, liq: bruto-cust-iof-ir, liqApp: bruto-iof-trunc2(Math.max(bruto-custo-iof,0)*aliq) };
 }
-// vende quantidade qty (PEPS) — retorna partes e totais
-function sellPortfolio(t, r, qty=Infinity, puOverride){
-  const lots = activeLots(t).sort((a,b)=>a.dn-b.dn);
-  let left = qty; const parts=[];
-  for (const l of lots){ if (left<=1e-9) break; const q = Math.min(l.qty, left); left -= q; parts.push({lot:l, ...sellPart(l, q, t, r, puOverride)}); }
-  const sum = k => parts.reduce((s,p)=>s+p[k],0);
-  return { parts, q:sum('q'), bruto:sum('bruto'), custo:sum('custo'), cust:sum('cust'), iof:sum('iof'), ir:sum('ir'), liq:sum('liq') };
+function aggregate(parts){ const s = k => parts.reduce((a,p)=>a+p[k],0); return { parts, q:s('q'), bruto:s('bruto'), custo:s('custo'), cust:s('cust'), iof:s('iof'), ir:s('ir'), liq:s('liq'), liqApp:s('liqApp') }; }
+// venda (PEPS) ao PU pu; carry=true -> cada lote à sua própria taxa de compra
+function sellPortfolio(t, pu, qty=Infinity, carry=false){
+  const lots = activeLots(t).sort((a,b)=>a.dn-b.dn); let left = qty; const parts=[];
+  for (const l of lots){ if (left<=1e-9) break; const q = Math.min(l.qty, left); left -= q; parts.push({lot:l, ...sellPart(l, q, t, carry ? PU(t, l.rate) : pu)}); }
+  return aggregate(parts);
 }
+const sellScenario = (t, target, qty) => sellPortfolio(t, sellPU(t, sellRate(t, target)), qty);
 
 /* ===================== ESTADO ===================== */
+const todayISO = () => isoDN(Math.round((Date.now() - new Date().getTimezoneOffset()*60000)/DAY));
 const DEFAULT = {
-  refDate: isoDN(Math.round((Date.now() - new Date().getTimezoneOffset()*60000)/DAY)),
-  refPrice: 269.82, refRate: '', ipca: 4.5,
-  custMode:'none', cust1:0.50, cust2:0.20, cust3:0.10,
+  refDate: todayISO(), refPrice: 243.38, refRate: '', ipcaCal: 4.5,
+  custMode:'single', cust1:0.50, cust2:0.20, cust3:0.10,
+  ipca: 4.5, target: '', convMonths: 24, spread: 0, simDate: '', simQty: '',
   lots: [
     {date:'2026-01-23', rate:6.99, price:185.02, qty:25.35},
     {date:'2026-03-24', rate:7.14, price:177.03, qty:56.48},
     {date:'2026-06-08', rate:7.27, price:172.89, qty:28.92},
     {date:'2026-07-30', rate:7.37, price:168.02, qty:29.58},
   ],
-  chartYears:10, chartMetric:'liq', chartReal:'nom', chartRates:'5,5; 6; 6,5; 7; 7,5; 8',
-  mxYears:'0; 1; 2; 3; 5; 10; 15; 20; 30; 38', mxRates:'5; 5,5; 6; 6,5; 7; 7,5; 8; 8,5',
-  simYears:1, simRate:'', simQty:''
+  chartYears:10, chartMetric:'liq', chartReal:'nom', chartRates:'5,5; 6; 7; 8',
+  mxYears:'0; 1; 2; 3; 5; 10; 15; 20; 30', mxRates:'5; 5,5; 6; 6,5; 7; 7,5; 8; 8,5',
 };
-const KEY = 'rendaplus2065_v1';
-let ST = JSON.parse(localStorage.getItem(KEY) || 'null') || structuredClone(DEFAULT);
-const save = () => localStorage.setItem(KEY, JSON.stringify(ST));
-let LOTS = []; // lotes processados
+const KEY = 'rendaplus2065_v2';
+let ST; try { ST = JSON.parse(localStorage.getItem(KEY)); } catch(e){}
+ST = Object.assign(structuredClone(DEFAULT), ST || {});
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(ST)); } catch(e){} };
+let LOTS = [];
 
 const num = v => { if (v===null||v===undefined) return NaN; if (typeof v==='number') return v; const s=String(v).trim().replace(/\s/g,''); if(!s) return NaN; return Number(s.includes(',') ? s.replace(/\./g,'').replace(',','.') : s); };
 const list = s => String(s).split(';').map(x=>num(x)).filter(x=>!isNaN(x));
@@ -295,39 +325,38 @@ const pct = (v,d=2) => (v*100).toLocaleString('pt-BR',{minimumFractionDigits:d,m
 const nf = (v,d=2) => v.toLocaleString('pt-BR',{minimumFractionDigits:d,maximumFractionDigits:d});
 const cls = v => v>=0 ? 'pos' : 'neg';
 const sg = v => (v>=0?'+':'')+brl(v);
+const mil = v => (v>=0?'+':'')+(v/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})+' mil';
 
-function activeLots(t){ return LOTS.filter(l => l.dn <= t && l.qty>0 && l.price>0); }
+const activeLots = t => LOTS.filter(l => l.dn <= t && l.qty>0 && l.price>0);
 const totalQty = t => activeLots(t).reduce((s,l)=>s+l.qty,0);
 function avgRate(t){ const ls=activeLots(t); const w=ls.reduce((s,l)=>s+l.qty*l.price,0); return w? ls.reduce((s,l)=>s+l.rate*l.qty*l.price,0)/w : M.rNow; }
+const curTarget = () => isNaN(num(ST.target)) ? M.r0 : num(ST.target)/100;
 
 /* ===================== CALIBRAÇÃO ===================== */
 function calibrate(){
-  M.ref = toDN(ST.refDate || DEFAULT.refDate);
+  M.ref = toDN(ST.refDate) || toDN(todayISO());
   M.ipca = (num(ST.ipca) || 0)/100;
+  M.spread = Math.max(num(ST.spread)||0, 0)/100;
+  M.conv = Math.max(num(ST.convMonths)||0, 0);
   CUST = { mode:ST.custMode, t:[num(ST.cust1)/100||0, num(ST.cust2)/100||0, num(ST.cust3)/100||0] };
-  const p = num(ST.refPrice), r = num(ST.refRate)/100;
-  // âncora: compra mais recente com preço informado
+  const p = num(ST.refPrice), r = num(ST.refRate)/100, ipcaCal = (num(ST.ipcaCal)||0)/100;
   const known = ST.lots.map(l=>({dn:toDN(l.date), r:num(l.rate)/100, p:num(l.price)})).filter(l=>!isNaN(l.dn)&&l.p>0&&!isNaN(l.r)&&l.dn<=M.ref).sort((a,b)=>a.dn-b.dn);
-  const anchorF = () => { const a = known[known.length-1]; if(!a) return NaN; const Fa = a.p/A(a.dn,a.r); return Fa*Math.pow(1+M.ipca, du(a.dn,M.ref)/252); };
+  const anchorF = () => { const a = known[known.length-1]; if(!a) return NaN; return a.p/A(a.dn,a.r)*Math.pow(1+ipcaCal, du(a.dn,M.ref)/252); };
   let msg='';
-  if (p>0 && !isNaN(r)) { M.Fref = p/A(M.ref,r); M.rNow=r; M.pNow=p; msg = `Calibrado com preço <b>${brl(p)}</b> e taxa <b>IPCA + ${pct(r)}</b>.`; }
-  else if (p>0) { M.Fref = anchorF(); M.rNow = solveRate(M.ref, p, M.Fref); M.Fref = p/A(M.ref, M.rNow); M.pNow=p;
-    msg = `Taxa implícita no preço ${brl(p)}: <b>IPCA + ${pct(M.rNow,3)}</b> (estimada a partir da última compra + IPCA projetado). Para ficar mais preciso, informe também a taxa de resgate exibida no site.`; }
-  else if (!isNaN(r)) { M.Fref = anchorF(); M.rNow=r; M.pNow = PU(M.ref, r); msg = `Preço estimado para IPCA + ${pct(r)}: <b>${brl(M.pNow)}</b>.`; }
-  else { M.Fref = anchorF(); M.rNow = known.length? known[known.length-1].r : 0.07; M.pNow = PU(M.ref, M.rNow); msg = `<span class="warn">Informe o preço e/ou a taxa atual.</span> Usando a taxa da última compra.`; }
-  if (!(M.Fref>0)) { M.Fref = 1; msg = '<span class="neg">Não foi possível calibrar: informe preço e taxa atuais.</span>'; }
-  // validação: IPCA implícito entre compras
+  if (p>0 && !isNaN(r)) { M.Fref = p/A(M.ref,r); M.rNow=r; M.pNow=p; msg = `Calibrado com PU <b>${brl(p)}</b> e taxa de resgate <b>IPCA + ${pct(r)}</b>.`; }
+  else if (p>0) { const Fa = anchorF(); M.rNow = Fa>0 ? solveRate(M.ref, p, Fa) : 0.07; M.Fref = p/A(M.ref, M.rNow); M.pNow=p;
+    msg = `Taxa de resgate implícita no PU ${brl(p)}: <b>IPCA + ${pct(M.rNow,3)}</b>. Ela foi estimada pela última compra corrigida a ${pct(ipcaCal,1)} a.a. de IPCA; se o app mostrar a taxa de resgate, digite-a para ficar exato.`; }
+  else if (!isNaN(r)) { M.Fref = anchorF(); M.rNow=r; M.pNow = PU(M.ref, r); msg = `PU estimado para IPCA + ${pct(r)}: <b>${brl(M.pNow)}</b>.`; }
+  else { M.Fref = anchorF(); M.rNow = known.length? known[known.length-1].r : 0.07; M.pNow = PU(M.ref, M.rNow); msg = `<span class="warn">Informe o PU e/ou a taxa de resgate atual.</span>`; }
+  if (!(M.Fref>0)) { M.Fref = 1; msg = '<span class="neg">Não foi possível calibrar: informe o PU e a taxa atuais.</span>'; }
+  M.r0 = M.rNow - M.spread;
   let val='';
   if (known.length>=2){
-    const Fs = known.map(k=>({dn:k.dn, F:k.p/A(k.dn,k.r)}));
-    const a=Fs[0], b=Fs[Fs.length-1], c={dn:M.ref, F:M.Fref};
-    const ann = (x,y)=> Math.pow(y.F/x.F, 252/Math.max(du(x.dn,y.dn),1)) - 1;
-    val = `<br>Validação do modelo: entre ${fmtD(a.dn)} e ${fmtD(b.dn)} o fator (VNA) das suas compras cresceu <b>${pct(b.F/a.F-1)}</b> (≈ ${pct(ann(a,b))} a.a.), que deve ser da ordem do IPCA do período (pequenas diferenças vêm de arredondamento de preço/taxa e da forma como o Tesouro projeta o VNA).`;
-    if (p>0 && !isNaN(r)) val += ` Da última compra até hoje: ${pct(c.F/b.F-1)} (≈ ${pct(ann(b,c))} a.a.).`;
+    const Fs = known.map(k=>({dn:k.dn, F:k.p/A(k.dn,k.r)})), a=Fs[0], b=Fs[Fs.length-1];
+    val = `<br><span class="small" style="color:#bcd7bc">Checagem: entre ${fmtD(a.dn)} e ${fmtD(b.dn)} o fator VNA implícito nas suas compras subiu ${pct(b.F/a.F-1)}, o que deve ficar próximo do IPCA do período.</span>`;
   }
-  document.getElementById('calibInfo').innerHTML = `<div class="note">${msg}${val}</div>`;
-  // lotes
-  LOTS = ST.lots.map((l,i)=>{ const dn = toDN(l.date||'2000-01-01'); const rate = num(l.rate)/100; let price = num(l.price); const auto = !(price>0);
+  document.getElementById('calibInfo').innerHTML = `<div class="note">${msg}${M.spread?` Taxa de mercado (compra) hoje ≈ IPCA + ${pct(M.r0)} (resgate − spread).`:''}${val}</div>`;
+  LOTS = ST.lots.map((l,i)=>{ const dn = toDN(l.date); const rate = num(l.rate)/100; let price = num(l.price); const auto = !(price>0);
     if (auto && !isNaN(rate) && dn<=MAX_DN) price = PU(dn, rate);
     return { i, dn, rate, price, qty: num(l.qty)||0, auto }; }).filter(l=>!isNaN(l.dn)&&!isNaN(l.rate));
 }
@@ -336,17 +365,15 @@ function calibrate(){
 function renderLotsTable(){
   const tb = document.querySelector('#lotsTable tbody'); tb.innerHTML='';
   ST.lots.forEach((l,i)=>{
-    const L = LOTS.find(x=>x.i===i);
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td><input type="date" data-i="${i}" data-k="date" value="${l.date||''}"></td>
-      <td><input type="number" step="0.01" data-i="${i}" data-k="rate" value="${l.rate}"></td>
-      <td><input type="number" step="0.01" data-i="${i}" data-k="price" value="${l.price}" placeholder="auto"></td>
-      <td><input type="number" step="0.01" data-i="${i}" data-k="qty" value="${l.qty}"></td>
-      <td class="pu">${L&&L.price>0? brl(L.price)+(L.auto?' <span class="pill">modelo</span>':''):'-'}</td>
-      <td class="vc">${L&&L.price>0? brl(trunc2(L.price*L.qty)):'-'}</td>
-      <td><button class="del" data-del="${i}">✕</button></td>`;
+    tr.innerHTML = `<td><input type="date" data-i="${i}" data-f="date" value="${l.date||''}"></td>
+      <td><input type="number" step="0.01" data-i="${i}" data-f="rate" value="${l.rate}"></td>
+      <td><input type="number" step="0.01" data-i="${i}" data-f="price" value="${l.price}" placeholder="auto"></td>
+      <td><input type="number" step="0.01" data-i="${i}" data-f="qty" value="${l.qty}"></td>
+      <td class="pu"></td><td class="vc"></td><td><button class="del" data-del="${i}" title="Remover">✕</button></td>`;
     tb.appendChild(tr);
   });
+  refreshLotDerived();
 }
 function refreshLotDerived(){
   document.querySelectorAll('#lotsTable tbody tr').forEach((tr,i)=>{
@@ -357,93 +384,102 @@ function refreshLotDerived(){
 }
 
 /* ===================== RENDER: HOJE ===================== */
-function kpi(l,v,s='',c=''){ return `<div class="kpi"><div class="l">${l}</div><div class="v ${c}">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`; }
+const kpi = (l,v,s='',c='') => `<div class="kpi"><div class="l">${l}</div><div class="v ${c}">${v}</div>${s?`<div class="s">${s}</div>`:''}</div>`;
+const hasCust = () => CUST.mode!=='none';
 function renderToday(){
-  const t = M.ref, res = sellPortfolio(t, M.rNow, Infinity, M.pNow);
-  const gain = res.liq - res.custo;
+  const t = M.ref, res = sellPortfolio(t, M.pNow);
+  if (!res.q){ document.getElementById('todayKpis').innerHTML=''; document.getElementById('todayTable').innerHTML='<tr><td>Nenhum lote comprado até a data de referência.</td></tr>'; return; }
+  const gainApp = res.liqApp - res.custo, gain = res.liq - res.custo;
   document.getElementById('todayKpis').innerHTML =
-    kpi('Total investido', brl(res.custo), `${nf(res.q)} títulos · preço médio ${brl(res.q?res.custo/res.q:0)}`) +
-    kpi('Taxa média de compra', 'IPCA + '+pct(avgRate(t)), `Mercado hoje: IPCA + ${pct(M.rNow)}`) +
-    kpi('Saldo bruto', brl(res.bruto), `PU ${brl(M.pNow)}`) +
-    kpi('IR + IOF' + (CUST.mode!=='none'?' + custódia':''), brl(res.ir+res.iof+res.cust)) +
-    kpi('Saldo líquido', brl(res.liq), `Lucro líquido ${sg(gain)} (${pct(res.custo?gain/res.custo:0)})`, cls(gain));
-  let h = `<thead><tr><th>Data</th><th>Taxa compra</th><th>Preço e qtd</th><th>Valor da compra</th><th>Dias</th><th>Saldo bruto</th><th>IR (alíq.)</th>${CUST.mode!=='none'?'<th>Custódia</th>':''}<th>IOF</th><th>Saldo líquido</th><th>Rentab. líq.</th></tr></thead><tbody>`;
+    kpi('Total investido', brl(res.custo), `${nf(res.q)} títulos · PM ${brl(res.custo/res.q)}`) +
+    kpi('Taxa média de compra', 'IPCA + '+pct(avgRate(t)), `Resgate hoje: IPCA + ${pct(M.rNow)}`) +
+    kpi('Valor bruto', brl(res.bruto), `PU ${brl(M.pNow)}`) +
+    kpi('Líquido (como no app)', brl(res.liqApp), `IR ${brl(res.bruto-res.liqApp-res.iof)} · ${sg(gainApp)}`, cls(gainApp)) +
+    (hasCust() ? kpi('Líquido após custódia B3', brl(res.liq), `custódia ${brl(res.cust)} · IR ${brl(res.ir)}`, cls(gain)) : '') +
+    kpi('Rentabilidade líquida', pct(gain/res.custo), sg(gain), cls(gain));
+  let h = `<thead><tr><th>Data</th><th>Taxa compra</th><th>Preço e qtd</th><th>Valor da compra</th><th>Dias</th><th>Valor bruto</th>${hasCust()?'<th>Custódia</th>':''}<th>IR (alíq.)</th><th>IOF</th><th>Líquido</th><th>Rentab. líq.</th></tr></thead><tbody>`;
   for (const p of res.parts.slice().sort((a,b)=>b.lot.dn-a.lot.dn)){
     h += `<tr><td>${fmtD(p.lot.dn)}</td><td>IPCA + ${pct(p.lot.rate)}</td><td>${brl(p.lot.price)}<div class="small">${nf(p.q)}</div></td><td>${brl(p.custo)}</td><td>${p.days}</td>
-      <td>${brl(p.bruto)}</td><td>${brl(p.ir)} <span class="small">(${pct(p.aliq,1)})</span></td>${CUST.mode!=='none'?`<td>${brl(p.cust)}</td>`:''}<td>${brl(p.iof)}</td>
+      <td>${brl(p.bruto)}</td>${hasCust()?`<td>${brl(p.cust)}</td>`:''}<td>${brl(p.ir)} <span class="small">(${pct(p.aliq,1)})</span></td><td>${brl(p.iof)}</td>
       <td>${brl(p.liq)}</td><td class="${cls(p.liq-p.custo)}">${pct((p.liq-p.custo)/p.custo)}</td></tr>`;
   }
-  h += `<tr class="total"><td>Total</td><td>IPCA + ${pct(avgRate(t))}</td><td>${nf(res.q)}</td><td>${brl(res.custo)}</td><td></td><td>${brl(res.bruto)}</td><td>${brl(res.ir)}</td>${CUST.mode!=='none'?`<td>${brl(res.cust)}</td>`:''}<td>${brl(res.iof)}</td><td>${brl(res.liq)}</td><td class="${cls(gain)}">${pct(res.custo?gain/res.custo:0)}</td></tr></tbody>`;
+  h += `<tr class="total"><td>Total</td><td>IPCA + ${pct(avgRate(t))}</td><td>${nf(res.q)}</td><td>${brl(res.custo)}</td><td></td><td>${brl(res.bruto)}</td>${hasCust()?`<td>${brl(res.cust)}</td>`:''}<td>${brl(res.ir)}</td><td>${brl(res.iof)}</td><td>${brl(res.liq)}</td><td class="${cls(gain)}">${pct(gain/res.custo)}</td></tr></tbody>`;
   document.getElementById('todayTable').innerHTML = h;
-  if (!res.q) document.getElementById('todayTable').innerHTML = '<tr><td>Nenhum lote comprado até a data de referência.</td></tr>';
 }
 
 /* ===================== RENDER: SIMULADOR ===================== */
-function xirr(flows){ // [{dn, v}] -> taxa anual (base 365)
+function xirr(flows){
   const f = r => flows.reduce((s,x)=>s + x.v/Math.pow(1+r,(x.dn-flows[0].dn)/365),0);
   let lo=-0.99, hi=5; if (f(lo)*f(hi)>0) return NaN;
   for (let i=0;i<200;i++){ const m=(lo+hi)/2; if (f(lo)*f(m)<=0) hi=m; else lo=m; } return (lo+hi)/2;
 }
+let rateChart=null;
 function renderSim(){
-  const t = Math.min(Math.max(toDN(ST.simDate || isoDN(addYearsDN(M.ref,1))), M.ref), MAX_DN);
-  const r = (isNaN(num(ST.simRate)) ? M.rNow*100 : num(ST.simRate))/100;
-  const qMax = totalQty(t);
-  let q = num(ST.simQty); if (isNaN(q) || q>qMax) q = qMax;
+  let t = toDN(ST.simDate); if (isNaN(t)) t = addYearsDN(M.ref,1);
+  t = Math.min(Math.max(t, M.ref), MAX_DN);
+  const tgt = curTarget(), rS = sellRate(t, tgt), pu = sellPU(t, rS);
+  const qMax = totalQty(t); let q = num(ST.simQty); if (isNaN(q) || q>qMax) q = qMax;
   document.getElementById('qtyMaxLbl').textContent = nf(qMax);
   document.getElementById('simDateLbl').textContent = fmtD(t);
-  const yrs = (t-M.ref)/365.25;
-  document.getElementById('simYearsLbl').textContent = `daqui a ${nf(yrs,1)} anos`;
-  document.getElementById('simRateLbl').textContent = 'IPCA + '+pct(r);
-  const res = sellPortfolio(t, r, q);
-  const today = sellPortfolio(M.ref, M.rNow, q, M.pNow);
+  document.getElementById('simYearsLbl').textContent = `(daqui a ${nf((t-M.ref)/365.25,1)} anos)`;
+  document.getElementById('tgtNowLbl').textContent = `atual ${pct(M.r0)}`;
+  const res = sellPortfolio(t, pu, q), today = sellPortfolio(M.ref, M.pNow, q);
   const gain = res.liq - res.custo;
-  const flows = res.parts.map(p=>({dn:p.lot.dn, v:-p.custo})).concat([{dn:t, v:res.liq}]).sort((a,b)=>a.dn-b.dn);
-  const irr = res.q ? xirr(flows) : NaN;
-  const realIrr = (1+irr)/(1+M.ipca)-1;
-  const defl = deflator(t);
-  const tgt = (t===M.ref && Math.abs(r-M.rNow)<1e-9) ? M.pNow : PU(t,r);
+  const irr = res.q ? xirr(res.parts.map(p=>({dn:p.lot.dn, v:-p.custo})).concat([{dn:t, v:res.liq}]).sort((a,b)=>a.dn-b.dn)) : NaN;
   document.getElementById('simKpis').innerHTML =
-    kpi('PU projetado', brl(tgt), `Hoje: ${brl(M.pNow)}`) +
-    kpi('Saldo bruto', brl(res.bruto), `Investido: ${brl(res.custo)}`) +
-    kpi('IR' + (res.iof?' + IOF':'') + (CUST.mode!=='none'?' + custódia':''), brl(res.ir+res.iof+res.cust), CUST.mode!=='none'?`custódia ${brl(res.cust)}`:'') +
-    kpi('Saldo líquido', brl(res.liq), `em R$ de hoje: ${brl(res.liq/defl)}`, cls(gain)) +
+    kpi('Taxa de venda na data', 'IPCA + '+pct(rS), `mercado ${pct(mktRate(t,tgt))} + spread ${nf(M.spread*100)} p.p.`) +
+    kpi('PU de venda', brl(pu), `hoje ${brl(M.pNow)}`) +
+    kpi('Valor bruto', brl(res.bruto), `investido ${brl(res.custo)}`) +
+    kpi('IR' + (res.iof?' + IOF':'') + (hasCust()?' + custódia':''), brl(res.ir+res.iof+res.cust), hasCust()?`custódia ${brl(res.cust)} · IR ${brl(res.ir)}`:'') +
+    kpi('Saldo líquido', brl(res.liq), `em R$ de hoje: ${brl(res.liq/deflator(t))}`, cls(gain)) +
     kpi('Lucro líquido', sg(gain), pct(res.custo?gain/res.custo:0)+' sobre o investido', cls(gain)) +
-    kpi('Rentab. líquida anual', isNaN(irr)?'-':pct(irr), isNaN(irr)?'':`≈ IPCA + ${pct(realIrr)} líquido`, cls(irr||0)) +
+    kpi('Rentab. líquida anual', isNaN(irr)?'-':pct(irr), isNaN(irr)?'':`≈ IPCA + ${pct((1+irr)/(1+M.ipca)-1)}`, cls(irr||0)) +
     kpi('vs. vender hoje', sg(res.liq - today.liq), `hoje: ${brl(today.liq)}`, cls(res.liq-today.liq));
-  // decomposição carrego x marcação (bruto)
   let carry=0, mtm=0;
-  for (const p of res.parts){ const puC = PU(t, p.lot.rate); carry += trunc2(p.q*puC) - p.custo; mtm += p.bruto - trunc2(p.q*puC); }
-  document.getElementById('simDecomp').innerHTML = res.q ? `<div class="note">Ganho bruto de <b>${sg(res.bruto-res.custo)}</b> =
-    <b class="${cls(carry)}">${sg(carry)}</b> de <b>carrego</b> (IPCA + sua taxa de compra de cada lote) +
-    <b class="${cls(mtm)}">${sg(mtm)}</b> de <b>marcação a mercado</b> (vender a IPCA + ${pct(r)} em vez da taxa de compra).
-    ${mtm<0?'<br><span class="warn">Se a taxa de mercado ficar acima da sua taxa de compra, a marcação come parte do carrego. Levando até 2065, a marcação desaparece e você recebe exatamente IPCA + taxa contratada.</span>':''}</div>` : '';
-  let h = `<thead><tr><th>Lote (PEPS)</th><th>Qtd vendida</th><th>Dias</th><th>Valor compra</th><th>Bruto</th><th>IR</th>${CUST.mode!=='none'?'<th>Custódia</th>':''}<th>IOF</th><th>Líquido</th><th>Lucro líq.</th></tr></thead><tbody>`;
-  for (const p of res.parts) h += `<tr><td>${fmtD(p.lot.dn)} · IPCA + ${pct(p.lot.rate)}</td><td>${nf(p.q)}</td><td>${p.days}</td><td>${brl(p.custo)}</td><td>${brl(p.bruto)}</td><td>${brl(p.ir)} <span class="small">(${pct(p.aliq,1)})</span></td>${CUST.mode!=='none'?`<td>${brl(p.cust)}</td>`:''}<td>${brl(p.iof)}</td><td>${brl(p.liq)}</td><td class="${cls(p.liq-p.custo)}">${sg(p.liq-p.custo)}</td></tr>`;
+  for (const p of res.parts){ const v = trunc2(p.q*PU(t, p.lot.rate)); carry += v - p.custo; mtm += p.bruto - v; }
+  document.getElementById('simDecomp').innerHTML = res.q ? `<div class="note">Ganho bruto <b>${sg(res.bruto-res.custo)}</b> =
+    <b class="${cls(carry)}">${sg(carry)}</b> de <b>carrego</b> (IPCA + taxa de compra de cada lote) +
+    <b class="${cls(mtm)}">${sg(mtm)}</b> de <b>marcação a mercado</b> (venda a IPCA + ${pct(rS)}).
+    ${mtm<0?'<br><span class="warn">Com a taxa de venda acima da sua taxa de compra, a marcação come parte do carrego. Se você levar até 2065, a marcação some e você recebe exatamente IPCA + a taxa contratada.</span>':''}</div>` : '';
+  let h = `<thead><tr><th>Lote (PEPS)</th><th>Qtd vendida</th><th>Dias</th><th>Valor compra</th><th>Bruto</th>${hasCust()?'<th>Custódia</th>':''}<th>IR</th><th>IOF</th><th>Líquido</th><th>Lucro líq.</th></tr></thead><tbody>`;
+  for (const p of res.parts) h += `<tr><td>${fmtD(p.lot.dn)} · IPCA + ${pct(p.lot.rate)}</td><td>${nf(p.q)}</td><td>${p.days}</td><td>${brl(p.custo)}</td><td>${brl(p.bruto)}</td>${hasCust()?`<td>${brl(p.cust)}</td>`:''}<td>${brl(p.ir)} <span class="small">(${pct(p.aliq,1)})</span></td><td>${brl(p.iof)}</td><td>${brl(p.liq)}</td><td class="${cls(p.liq-p.custo)}">${sg(p.liq-p.custo)}</td></tr>`;
   document.getElementById('simTable').innerHTML = h + '</tbody>';
+  // mini gráfico da trajetória da taxa
+  if (typeof Chart === 'undefined') return;
+  const horizon = Math.max(M.conv + 12, Math.ceil(monthsFrom(t)) + 6, 24);
+  const xs=[], ys=[]; for (let m=0;m<=horizon;m++){ const d = Math.min(addMonthsDN(M.ref,m), MAX_DN); xs.push(m); ys.push(sellRate(d,tgt)*100); }
+  const mSale = Math.round(monthsFrom(t));
+  const cfg = {labels:xs, datasets:[
+      {label:'Taxa de venda', data:ys, borderColor:'#4f8cff', borderWidth:2, pointRadius:xs.map(m=>m===mSale?5:0), pointBackgroundColor:'#fff', tension:0},
+      {label:'Taxa média de compra', data:xs.map(()=>avgRate(M.ref)*100), borderColor:'#ffffff', borderDash:[5,4], borderWidth:1.2, pointRadius:0}]};
+  if (rateChart){ rateChart.data = cfg; rateChart.update('none'); }
+  else rateChart = new Chart(document.getElementById('rateChart'), {type:'line', data:cfg, options:{responsive:true, maintainAspectRatio:false, animation:false,
+    plugins:{legend:{labels:{color:'#cfd8ea',boxWidth:12,font:{size:11}}}, tooltip:{callbacks:{title:c=>`mês ${c[0].label}`, label:c=>`${c.dataset.label}: IPCA + ${nf(c.parsed.y)}%`}}},
+    scales:{x:{title:{display:true,text:'meses a partir de hoje',color:'#8fa0b6'},ticks:{color:'#8fa0b6',maxTicksLimit:12},grid:{color:'#222c3b'}}, y:{ticks:{color:'#8fa0b6',callback:v=>nf(v)+'%'},grid:{color:'#222c3b'}}}}});
 }
 
 /* ===================== RENDER: GRÁFICO ===================== */
 let chart=null;
-function portfolioValue(t, r, metric, carryMode=false){
-  const lots = activeLots(t); let v=0;
-  for (const l of lots){ const s = sellPart(l, l.qty, t, carryMode? l.rate : r); v += metric==='bruto'? s.bruto : s.liq; }
-  return v;
+function valueAt(t, target, metric, carry=false){
+  const res = carry ? sellPortfolio(t, 0, Infinity, true) : sellScenario(t, target);
+  return metric==='bruto' ? res.bruto : res.liq;
 }
 function renderChart(){
   if (typeof Chart === 'undefined'){ document.getElementById('chartFallback').style.display='block'; return; }
-  const yrs = Math.min(Math.max(num(ST.chartYears)||10,1), 38.2);
-  const end = Math.min(addYearsDN(M.ref, yrs), MAX_DN);
-  const pts=[]; for (let m=0;;m++){ const t = addYearsDN(M.ref, m/12); if (t>end) break; pts.push(t); }
-  const real = ST.chartReal==='real', metric = ST.chartMetric;
-  const adj = (t,v) => real ? v/deflator(t) : v;
-  const rates = list(ST.chartRates).map(x=>x/100);
-  const palette = ['#ff6b6b','#ffa94d','#ffd43b','#69db7c','#38d9a9','#4dabf7','#9775fa','#f783ac','#adb5bd'];
-  const ds = rates.map((r,i)=>({label:`IPCA + ${pct(r)}`, data:pts.map(t=>adj(t,portfolioValue(t,r,metric))), borderColor:palette[i%palette.length], backgroundColor:'transparent', borderWidth:1.8, pointRadius:0, tension:.15}));
-  ds.unshift({label:'Carrego (taxa de compra)', data:pts.map(t=>adj(t,portfolioValue(t,0,metric,true))), borderColor:'#ffffff', borderDash:[6,4], borderWidth:2.5, pointRadius:0});
-  ds.unshift({label:`Taxa atual constante (IPCA + ${pct(M.rNow)})`, data:pts.map(t=>adj(t,portfolioValue(t,M.rNow,metric))), borderColor:'#4f8cff', borderWidth:3, pointRadius:0});
-  ds.push({label:'Total investido', data:pts.map(t=>activeLots(t).reduce((s,l)=>s+trunc2(l.qty*l.price),0)), borderColor:'#888', borderDash:[2,3], borderWidth:1.5, pointRadius:0, stepped:true});
+  const yrs = Math.min(Math.max(num(ST.chartYears)||10,1), 38.2), end = Math.min(addYearsDN(M.ref, yrs), MAX_DN);
+  const pts=[]; for (let m=0;;m++){ const t = addMonthsDN(M.ref, m); if (t>end) break; pts.push(t); }
+  const real = ST.chartReal==='real', metric = ST.chartMetric, adj = (t,v) => real ? v/deflator(t) : v;
+  const palette = ['#ff6b6b','#ffa94d','#ffd43b','#69db7c','#38d9a9','#9775fa','#f783ac','#adb5bd'];
+  const tgt = curTarget();
+  const ds = [
+    {label:`Cenário: alvo IPCA + ${pct(tgt)} em ${M.conv} meses`, data:pts.map(t=>adj(t,valueAt(t,tgt,metric))), borderColor:'#4f8cff', borderWidth:3.2, pointRadius:0},
+    {label:'Carrego (taxa de compra)', data:pts.map(t=>adj(t,valueAt(t,0,metric,true))), borderColor:'#ffffff', borderDash:[6,4], borderWidth:2.2, pointRadius:0},
+    {label:`Taxa atual mantida (IPCA + ${pct(M.r0)})`, data:pts.map(t=>adj(t,valueAt(t,M.r0,metric))), borderColor:'#74c0fc', borderDash:[2,3], borderWidth:1.8, pointRadius:0},
+    ...list(ST.chartRates).map((r,i)=>({label:`Alvo IPCA + ${pct(r/100)}`, data:pts.map(t=>adj(t,valueAt(t,r/100,metric))), borderColor:palette[i%palette.length], borderWidth:1.5, pointRadius:0})),
+    {label:'Total investido', data:pts.map(t=>adj(t,activeLots(t).reduce((s,l)=>s+trunc2(l.qty*l.price),0))), borderColor:'#777', borderDash:[2,3], borderWidth:1.3, pointRadius:0, stepped:true},
+  ];
   const labels = pts.map(t=>{ const d=new Date(t*DAY); return String(d.getUTCMonth()+1).padStart(2,'0')+'/'+d.getUTCFullYear(); });
-  if (chart) chart.destroy();
+  if (chart){ chart.data = {labels, datasets:ds}; chart.update('none'); return; }
   chart = new Chart(document.getElementById('chart'), {type:'line', data:{labels, datasets:ds},
     options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, animation:false,
       plugins:{legend:{labels:{color:'#cfd8ea',boxWidth:14}}, tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${brl(c.parsed.y)}`}}},
@@ -453,81 +489,82 @@ function renderChart(){
 /* ===================== RENDER: MATRIZ ===================== */
 function renderMatrix(){
   const ys = list(ST.mxYears), rs = list(ST.mxRates).map(x=>x/100);
-  const today = sellPortfolio(M.ref, M.rNow, Infinity, M.pNow);
+  const today = sellPortfolio(M.ref, M.pNow);
   const cols = ys.map(y=>({y, t: Math.min(addYearsDN(M.ref,y), MAX_DN)}));
-  let h = '<thead><tr><th>Taxa na venda ↓ / Quando →</th>' + cols.map(c=>`<th style="text-align:center">${c.y===0?'Hoje':nf(c.y,c.y%1?1:0)+(c.y===1?' ano':' anos')}<div class="small">${fmtD(c.t)}</div></th>`).join('') + '</tr></thead><tbody>';
-  const cell = (res, t) => {
-    const inv = res.custo, g = (res.liq-inv)/inv, vs = res.liq - today.liq;
-    const a = Math.min(Math.abs(g)/0.8,1)*0.45+0.08; const bg = g>=0?`rgba(46,204,113,${a})`:`rgba(255,92,92,${a})`;
-    return `<td><div class="cell" style="background:${bg}" title="Bruto ${brl(res.bruto)} · IR ${brl(res.ir)}${res.cust?' · Custódia '+brl(res.cust):''}${CUST.mode!=='none'?'':''} · em R$ de hoje ${brl(res.liq/deflator(t))}"><b>${brl(res.liq)}</b><div class="small" style="color:#e6ebf2">${g>=0?'+':''}${pct(g,1)} · vs hoje ${vs>=0?'+':''}${(vs/1000).toLocaleString('pt-BR',{maximumFractionDigits:1})} mil</div></div></td>`;
+  let h = '<thead><tr><th>Alvo ↓ / Venda →</th>' + cols.map(c=>`<th style="text-align:center">${c.y===0?'Hoje':nf(c.y,c.y%1?1:0)+(c.y===1?' ano':' anos')}<div class="small">${fmtD(c.t)}</div></th>`).join('') + '</tr></thead><tbody>';
+  const cell = (res, t, rS) => {
+    if (!res.custo) return '<td>-</td>';
+    const g = (res.liq-res.custo)/res.custo, vs = res.liq - today.liq;
+    const a = Math.min(Math.abs(g)/0.8,1)*0.45+0.08, bg = g>=0?`rgba(46,204,113,${a})`:`rgba(255,92,92,${a})`;
+    const tip = `${rS!==undefined?'Taxa de venda IPCA + '+pct(rS)+' · ':''}Bruto ${brl(res.bruto)} · Custódia ${brl(res.cust)} · IR ${brl(res.ir)} · em R$ de hoje ${brl(res.liq/deflator(t))}`;
+    return `<td><div class="cell" style="background:${bg}" title="${tip}"><b>${brl(res.liq)}</b><div class="small" style="color:#e6ebf2">${g>=0?'+':''}${pct(g,1)} · vs hoje ${mil(vs)}</div></div></td>`;
   };
-  // carrego
-  h += '<tr><td><b>Carrego</b><div class="small">taxa de compra de cada lote</div></td>' + cols.map(c=>{
-    const lots=activeLots(c.t); const parts=lots.map(l=>sellPart(l,l.qty,c.t,l.rate)); const res={liq:parts.reduce((s,p)=>s+p.liq,0),custo:parts.reduce((s,p)=>s+p.custo,0),bruto:parts.reduce((s,p)=>s+p.bruto,0),ir:parts.reduce((s,p)=>s+p.ir,0),cust:parts.reduce((s,p)=>s+p.cust,0)};
-    return res.custo? cell(res,c.t) : '<td>-</td>'; }).join('') + '</tr>';
-  for (const r of rs){
-    const near = Math.abs(r-M.rNow)<0.0026;
-    h += `<tr><td><b>IPCA + ${pct(r)}</b>${near?' <span class="pill">≈ atual</span>':''}</td>` + cols.map(c=>{ const res = sellPortfolio(c.t, r); return res.custo? cell(res,c.t) : '<td>-</td>'; }).join('') + '</tr>';
+  h += '<tr><td><b>Carrego</b><div class="small">taxa de compra de cada lote</div></td>' + cols.map(c=>cell(sellPortfolio(c.t,0,Infinity,true), c.t)).join('') + '</tr>';
+  const tgt = curTarget();
+  const rows = [...rs.map(r=>({r, lbl:''}))];
+  if (!rs.some(r=>Math.abs(r-tgt)<1e-6)) rows.push({r:tgt, lbl:' <span class="pill">cenário</span>'});
+  rows.sort((a,b)=>a.r-b.r);
+  for (const {r,lbl} of rows){
+    const isT = Math.abs(r-tgt)<1e-6, near = Math.abs(r-M.r0)<0.0026;
+    h += `<tr${isT?' style="outline:1px solid #4f8cff"':''}><td><b>IPCA + ${pct(r)}</b>${lbl}${isT&&!lbl?' <span class="pill">cenário</span>':''}${near?' <span class="pill">≈ atual</span>':''}</td>` +
+      cols.map(c=>{ const rS = sellRate(c.t, r); return cell(sellPortfolio(c.t, sellPU(c.t, rS)), c.t, rS); }).join('') + '</tr>';
   }
-  // taxa de empate
-  h += '<tr><td><b>Taxa de empate</b><div class="small">acima dela, prejuízo nominal</div></td>' + cols.map(c=>{
+  h += '<tr><td><b>Taxa de venda de empate</b><div class="small">acima dela, prejuízo líquido</div></td>' + cols.map(c=>{
     const inv = activeLots(c.t).reduce((s,l)=>s+trunc2(l.qty*l.price),0); if(!inv) return '<td>-</td>';
-    let lo=-0.05, hi=0.35; const f = r => sellPortfolio(c.t, r).liq - inv;
+    const f = r => sellPortfolio(c.t, PU(c.t, r)).liq - inv; let lo=-0.05, hi=0.35;
     if (f(hi)>0) return '<td>&gt; 35%</td>'; if (f(lo)<0) return '<td>-</td>';
-    for (let i=0;i<50;i++){ const m=(lo+hi)/2; if (f(m)>0) lo=m; else hi=m; }
+    for (let i=0;i<45;i++){ const m=(lo+hi)/2; if (f(m)>0) lo=m; else hi=m; }
     return `<td><b>IPCA + ${pct(lo)}</b></td>`; }).join('') + '</tr>';
   document.getElementById('mxTable').innerHTML = h + '</tbody>';
 }
 
 /* ===================== RENDER: SENSIBILIDADE ===================== */
 function renderSens(){
-  const t=M.ref, base = sellPortfolio(t, M.rNow, Infinity, M.pNow);
+  const t=M.ref, base = sellPortfolio(t, M.pNow);
   const shocks = [-1,-0.5,-0.25,-0.1,0.1,0.25,0.5,1];
-  let h = '<thead><tr><th>Choque na taxa</th>' + shocks.map(s=>`<th style="text-align:center">${s>0?'+':''}${nf(s,2)} p.p.<div class="small">IPCA + ${pct(M.rNow+s/100)}</div></th>`).join('') + '</tr></thead><tbody>';
-  const rows = shocks.map(s=>{ const pu = trunc2(M.pNow * A(t,M.rNow+s/100)/A(t,M.rNow)); return {pu, res:sellPortfolio(t, 0, Infinity, pu)}; });
+  let h = '<thead><tr><th>Choque</th>' + shocks.map(s=>`<th style="text-align:center">${s>0?'+':''}${nf(s,2)} p.p.<div class="small">IPCA + ${pct(M.rNow+s/100)}</div></th>`).join('') + '</tr></thead><tbody>';
+  const rows = shocks.map(s=>{ const pu = trunc2(M.pNow * A(t,M.rNow+s/100)/A(t,M.rNow)); return {pu, res:sellPortfolio(t, pu)}; });
   h += '<tr><td>PU</td>' + rows.map(x=>`<td style="text-align:center">${brl(x.pu)}</td>`).join('') + '</tr>';
-  h += '<tr><td>Variação do saldo bruto</td>' + rows.map(x=>{ const d=x.res.bruto-base.bruto; return `<td style="text-align:center" class="${cls(d)}">${sg(d)}<div class="small">${pct(d/base.bruto,1)}</div></td>`; }).join('') + '</tr>';
+  h += '<tr><td>Variação do bruto</td>' + rows.map(x=>{ const d=x.res.bruto-base.bruto; return `<td style="text-align:center" class="${cls(d)}">${sg(d)}<div class="small">${pct(d/base.bruto,1)}</div></td>`; }).join('') + '</tr>';
   h += '<tr><td>Saldo líquido</td>' + rows.map(x=>`<td style="text-align:center">${brl(x.res.liq)}</td>`).join('') + '</tr>';
   document.getElementById('sensTable').innerHTML = h + '</tbody>';
   const e=1e-4, dur = -(Math.log(A(t,M.rNow+e))-Math.log(A(t,M.rNow-e)))/(2*e);
-  document.getElementById('durInfo').innerHTML = `Duration modificada ≈ <b>${nf(dur,1)}</b>: cada 0,1 p.p. de variação na taxa muda o preço em cerca de ${nf(dur*0.1,1)}%. Títulos longos como o RendA+ 2065 oscilam muito na marcação a mercado.`;
+  document.getElementById('durInfo').innerHTML = `Duration modificada ≈ <b>${nf(dur,1)}</b>: cada 0,1 p.p. de variação na taxa muda o PU em cerca de ${nf(dur*0.1,1)}%.`;
 }
 
 /* ===================== CONTROLE ===================== */
-const ids = ['refDate','refPrice','refRate','ipca','custMode','cust1','cust2','cust3','chartYears','chartMetric','chartReal','chartRates','mxYears','mxRates'];
+const bound = () => document.querySelectorAll('[data-k]');
 function loadInputs(){
-  ids.forEach(id=>{ document.getElementById(id).value = ST[id] ?? ''; });
   if (!ST.simDate) ST.simDate = isoDN(addYearsDN(toDN(ST.refDate), 1));
-  document.getElementById('simDate').value = ST.simDate;
-  document.getElementById('simQty').value = ST.simQty ?? '';
+  bound().forEach(el=>{ el.value = ST[el.dataset.k] ?? ''; });
 }
-function syncSimControls(){
-  const t = toDN(ST.simDate), yrs = (t-M.ref)/365.25;
-  const sl = document.getElementById('simYears'); sl.max = ((MAX_DN-M.ref)/365.25).toFixed(2); sl.value = Math.max(0,yrs);
-  const r = isNaN(num(ST.simRate)) ? M.rNow*100 : num(ST.simRate);
-  document.getElementById('simRate').value = nf(r,2).replace(/\./g,'').replace(',','.');
-  document.getElementById('simRateR').value = r;
-  document.getElementById('simDate').min = isoDN(M.ref); document.getElementById('simDate').max = isoDN(MAX_DN);
+function syncDerivedInputs(){
+  const tgt = curTarget()*100;
+  document.querySelectorAll('[data-k=target]').forEach(el=>{ if (document.activeElement!==el) el.value = (Math.round(tgt*100)/100).toFixed(2); });
+  const sl = document.getElementById('simYears'), t = toDN(ST.simDate);
+  sl.max = ((MAX_DN-M.ref)/365.25).toFixed(2); if (document.activeElement!==sl) sl.value = Math.max(0,(t-M.ref)/365.25);
+  const sd = document.querySelector('input[type=date][data-k=simDate]'); sd.min = isoDN(M.ref); sd.max = isoDN(MAX_DN);
 }
 let tmr=null;
 function renderAll(full=true){
-  calibrate(); refreshLotDerived(); renderToday(); syncSimControls(); renderSim();
-  if (full){ renderMatrix(); renderSens(); clearTimeout(tmr); tmr=setTimeout(renderChart, 30); }
+  calibrate(); refreshLotDerived(); renderToday(); syncDerivedInputs(); renderSim();
+  clearTimeout(tmr); tmr = setTimeout(()=>{ renderChart(); renderMatrix(); renderSens(); }, full?20:120);
   save();
 }
-ids.forEach(id=>document.getElementById(id).addEventListener('input', e=>{ ST[id]=e.target.value; renderAll(); }));
-document.querySelector('#lotsTable tbody').addEventListener('input', e=>{ const i=e.target.dataset.i, k=e.target.dataset.k; if(i===undefined) return; ST.lots[i][k]=e.target.value; renderAll(); });
+document.addEventListener('input', e=>{
+  const k = e.target.dataset && e.target.dataset.k; if (!k) return;
+  ST[k] = e.target.value;
+  document.querySelectorAll(`[data-k="${k}"]`).forEach(el=>{ if (el!==e.target) el.value = e.target.value; });
+  renderAll();
+});
+document.querySelector('#lotsTable tbody').addEventListener('input', e=>{ const i=e.target.dataset.i, f=e.target.dataset.f; if(i===undefined) return; ST.lots[i][f]=e.target.value; renderAll(); });
 document.querySelector('#lotsTable tbody').addEventListener('click', e=>{ const d=e.target.dataset.del; if(d===undefined) return; ST.lots.splice(+d,1); calibrate(); renderLotsTable(); renderAll(); });
-document.getElementById('addLot').onclick = ()=>{ ST.lots.push({date:ST.refDate, rate: (M.rNow*100).toFixed(2), price:'', qty:10}); calibrate(); renderLotsTable(); renderAll(); };
+document.getElementById('addLot').onclick = ()=>{ ST.lots.push({date:ST.refDate, rate:(M.r0*100).toFixed(2), price:'', qty:10}); calibrate(); renderLotsTable(); renderAll(); };
 document.getElementById('resetAll').onclick = ()=>{ if(!confirm('Restaurar todos os dados originais?')) return; ST = structuredClone(DEFAULT); loadInputs(); calibrate(); renderLotsTable(); renderAll(); };
-document.getElementById('simYears').addEventListener('input', e=>{ ST.simDate = isoDN(Math.min(addYearsDN(M.ref, Math.round(+e.target.value*12)/12), MAX_DN)); document.getElementById('simDate').value=ST.simDate; renderAll(false); });
-document.getElementById('simDate').addEventListener('change', e=>{ if(e.target.value){ ST.simDate=e.target.value; renderAll(false);} });
-document.getElementById('simRateR').addEventListener('input', e=>{ ST.simRate = e.target.value; renderAll(false); });
-document.getElementById('simRate').addEventListener('change', e=>{ ST.simRate = e.target.value; renderAll(false); });
-document.getElementById('btnRateNow').onclick = ()=>{ ST.simRate=''; renderAll(false); };
-document.getElementById('btnRateAvg').onclick = ()=>{ ST.simRate=(avgRate(M.ref)*100).toFixed(2); renderAll(false); };
-document.getElementById('simQty').addEventListener('input', e=>{ ST.simQty=e.target.value; renderAll(false); });
-document.getElementById('btnQtyAll').onclick = ()=>{ ST.simQty=''; document.getElementById('simQty').value=''; renderAll(false); };
+document.getElementById('simYears').addEventListener('input', e=>{ ST.simDate = isoDN(Math.min(addYearsDN(M.ref, +e.target.value), MAX_DN)); document.querySelector('input[type=date][data-k=simDate]').value = ST.simDate; renderAll(false); });
+document.getElementById('btnQtyAll').onclick = ()=>{ ST.simQty=''; document.querySelector('[data-k=simQty]').value=''; renderAll(); };
+document.getElementById('btnTgtNow').onclick = ()=>{ ST.target=''; renderAll(); };
+document.getElementById('btnTgtAvg').onclick = ()=>{ ST.target=(avgRate(M.ref)*100).toFixed(2); renderAll(); };
 
 loadInputs(); calibrate(); renderLotsTable(); renderAll();
 </script>
