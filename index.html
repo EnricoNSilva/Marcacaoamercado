@@ -72,65 +72,66 @@
     min-width: 0;
   }
 
-  /* HEADER & BRANDING COMPACTO (ECONOMIA DE ESPAÇO VERTICAL) */
+  /* HEADER ULTRA-SLIM & BRANDING (IHC: MÁXIMO APROVEITAMENTO VERTICAL) */
   header.app-header {
-    background: linear-gradient(180deg, #162035 0%, var(--bg-base) 100%);
+    background: var(--bg-surface);
     border-bottom: 1px solid var(--border-subtle);
-    padding: 12px 0 10px 0;
-    margin-bottom: 14px;
+    padding: 8px 0;
+    margin-bottom: 12px;
   }
   .header-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 12px;
   }
   .header-titles h1 {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: #fff;
     display: flex;
     align-items: center;
     gap: 8px;
+    margin: 0;
   }
   .header-titles h1 .badge-title {
     font-size: 10px;
     background: var(--brand-glow);
     color: #60a5fa;
     border: 1px solid rgba(96, 165, 250, 0.3);
-    padding: 1px 7px;
-    border-radius: 999px;
+    padding: 1px 6px;
+    border-radius: 4px;
     font-weight: 600;
-  }
-  .header-titles p {
-    font-size: 11.5px;
-    color: var(--text-muted);
-    margin-top: 1px;
   }
   .header-quick-stats {
     display: flex;
+    align-items: center;
     gap: 8px;
+    flex-wrap: wrap;
   }
-  .quick-stat {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
+  .stat-pill {
+    font-size: 12px;
+    color: var(--text-secondary);
+    background: var(--bg-elevated);
+    padding: 3px 9px;
     border-radius: var(--radius-sm);
-    padding: 4px 10px;
-    text-align: right;
+    border: 1px solid var(--border-subtle);
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
-  .quick-stat .lbl { font-size: 10px; color: var(--text-muted); }
-  .quick-stat .val { font-size: 12.5px; font-weight: 700; color: #fff; }
+  .stat-pill .lbl { color: var(--text-muted); font-size: 11px; }
+  .stat-pill strong { font-feature-settings: "tnum"; color: #fff; }
 
   /* NAVEGAÇÃO POR ABAS (PROGRESSIVE DISCLOSURE) */
   nav.app-tabs {
     display: flex;
-    gap: 5px;
+    gap: 4px;
     background: var(--bg-surface);
     padding: 3px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
-    margin-bottom: 16px;
+    margin-bottom: 14px;
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -139,19 +140,19 @@
   
   .tab-button {
     flex: 1;
-    min-width: 125px;
+    min-width: 115px;
     background: transparent;
     border: none;
     color: var(--text-secondary);
-    padding: 8px 12px;
-    font-size: 12.5px;
+    padding: 6px 10px;
+    font-size: 12px;
     font-weight: 600;
     border-radius: var(--radius-sm);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 6px;
     transition: all 0.18s ease;
     white-space: nowrap;
   }
@@ -540,16 +541,15 @@
           Tesouro RENDA+ 2065
           <span class="badge-title">NTN-B1 · 240 Parcelas</span>
         </h1>
-        <p>Simulador inteligente de Marcação a Mercado, Carrego e Tributação Regressiva</p>
       </div>
       <div class="header-quick-stats">
-        <div class="quick-stat">
-          <div class="lbl">Posição Líquida (App)</div>
-          <div class="val" id="topLiqApp">R$ 0,00</div>
+        <div class="stat-pill">
+          <span class="lbl">Líquido (App):</span>
+          <strong id="topLiqApp">R$ 0,00</strong>
         </div>
-        <div class="quick-stat">
-          <div class="lbl">Taxa Implícita Hoje</div>
-          <div class="val pos" id="topRateNow">IPCA + 0,00%</div>
+        <div class="stat-pill">
+          <span class="lbl">Taxa Hoje:</span>
+          <strong class="pos" id="topRateNow">IPCA + 0,00%</strong>
         </div>
       </div>
     </div>
