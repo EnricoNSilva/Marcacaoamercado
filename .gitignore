@@ -16,3 +16,11 @@ env/
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Node / Vite
+node_modules/
+dist/
+dist-ssr/
+*.local
+coverage/
+.vite/
