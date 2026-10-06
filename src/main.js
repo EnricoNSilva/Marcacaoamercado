@@ -13,7 +13,6 @@ import "./styles/responsive.css";
 // Importa Arquitetura de Estado e Componentes
 import { createStore } from "./state/index.js";
 import { initTabs } from "./ui/components/tabs.js";
-import { initInfoTipInteractions } from "./ui/components/infoTip.js";
 
 // Importa Views Modulares
 import { createHeaderView } from "./ui/views/headerView.js";
@@ -57,7 +56,4 @@ document.addEventListener("DOMContentLoaded", () => {
   const initialState = store.getState();
   const initialComputed = store.getComputed();
   views.forEach((v) => v.render(initialState, initialComputed));
-
-  // 6. Inicializa Interações de Balões Informativos (?)
-  initInfoTipInteractions();
 });

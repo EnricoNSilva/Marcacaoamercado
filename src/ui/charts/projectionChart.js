@@ -2,18 +2,29 @@
  * Gráfico: Curvas de Projeção Financeira e Marcação a Mercado
  */
 
-import { addYearsDN, getVNAFactor, calcPU, simulateSellPEPS, MAX_SIM_DATE, trunc2 } from '../../core/index.js';
-import { fmtBRL, fmtPct } from '../format.js';
-import { CHART_COLORS } from './theme.js';
+import {
+  addYearsDN,
+  getVNAFactor,
+  calcPU,
+  simulateSellPEPS,
+  MAX_SIM_DATE,
+  trunc2,
+} from "../../core/index.js";
+import { fmtBRL, fmtPct } from "../format.js";
+import { CHART_COLORS } from "./theme.js";
 
 let mainChartInstance = null;
 
 export function renderProjectionChart(canvasId, state, computed) {
-  const canvas = typeof canvasId === 'string' ? document.getElementById(canvasId) : canvasId;
-  if (!canvas || typeof Chart === 'undefined') return;
+  const canvas =
+    typeof canvasId === "string" ? document.getElementById(canvasId) : canvasId;
+  if (!canvas || typeof Chart === "undefined") return;
 
   const { refDN, Fref, custodyConfig } = computed;
-  const horizonYears = Math.min(Math.max(Number(state.chartHorizonYears) || 10, 3), 35);
+  const horizonYears = Math.min(
+    Math.max(Number(state.chartHorizonYears) || 10, 3),
+    35,
+  );
 
   const points = [];
   const labels = [];
@@ -21,10 +32,10 @@ export function renderProjectionChart(canvasId, state, computed) {
   for (let y = 0; y <= horizonYears; y += 0.5) {
     const d = Math.min(addYearsDN(refDN, y), MAX_SIM_DATE);
     points.push(d);
-    labels.push(y === 0 ? 'Hoje' : `${y}a`);
+    labels.push(y === 0 ? "Hoje" : `${y}a`);
   }
 
-  const isReal = state.chartReal === 'real';
+  const isReal = state.chartReal === "real";
 
   function getDeflator(d) {
     if (!isReal) return 1.0;
@@ -49,10 +60,10 @@ export function renderProjectionChart(canvasId, state, computed) {
       t: d,
       r: rateAnnual,
       vnaFactor: vna,
-      custodyConfig
+      custodyConfig,
     });
 
-    const val = state.chartMetric === 'bruto' ? res.bruto : res.liqReal;
+    const val = state.chartMetric === "bruto" ? res.bruto : res.liqReal;
     return val / deflator;
   }
 
@@ -61,33 +72,33 @@ export function renderProjectionChart(canvasId, state, computed) {
   const datasets = [
     {
       label: `Cenário Alvo (IPCA + ${fmtPct(targetRateDec)})`,
-      data: points.map(d => getValueAt(d, targetRateDec)),
+      data: points.map((d) => getValueAt(d, targetRateDec)),
       borderColor: CHART_COLORS.primary,
       borderWidth: 3,
-      pointRadius: 0
+      pointRadius: 0,
     },
     {
-      label: 'Carrego Puro (Taxa de Compra)',
-      data: points.map(d => getValueAt(d, 0, true)),
+      label: "Carrego Puro (Taxa de Compra)",
+      data: points.map((d) => getValueAt(d, 0, true)),
       borderColor: CHART_COLORS.whiteDashed,
       borderDash: [5, 4],
       borderWidth: 2,
-      pointRadius: 0
+      pointRadius: 0,
     },
     {
-      label: 'Queda de Juros (IPCA + 5,0%)',
-      data: points.map(d => getValueAt(d, 0.05)),
+      label: "Queda de Juros (IPCA + 5,0%)",
+      data: points.map((d) => getValueAt(d, 0.05)),
       borderColor: CHART_COLORS.success,
       borderWidth: 1.5,
-      pointRadius: 0
+      pointRadius: 0,
     },
     {
-      label: 'Estresse / Alta (IPCA + 8,0%)',
-      data: points.map(d => getValueAt(d, 0.08)),
+      label: "Estresse / Alta (IPCA + 8,0%)",
+      data: points.map((d) => getValueAt(d, 0.08)),
       borderColor: CHART_COLORS.danger,
       borderWidth: 1.5,
-      pointRadius: 0
-    }
+      pointRadius: 0,
+    },
   ];
 
   if (mainChartInstance) {
@@ -95,38 +106,36 @@ export function renderProjectionChart(canvasId, state, computed) {
   }
 
   mainChartInstance = new Chart(canvas, {
-    type: 'line',
+    type: "line",
     data: { labels, datasets },
     options: {
       responsive: true,
       maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
+      interaction: { mode: "index", intersect: false },
       plugins: {
         legend: {
-          labels: { color: CHART_COLORS.textSecondary, font: { size: 12 } }
+          labels: { color: CHART_COLORS.textSecondary, font: { size: 12 } },
         },
         tooltip: {
           callbacks: {
-            label: c => `${c.dataset.label}: ${fmtBRL(c.parsed.y)}`
-          }
-        }
+            label: (c) => `${c.dataset.label}: ${fmtBRL(c.parsed.y)}`,
+          },
+        },
       },
       scales: {
         x: {
           ticks: { color: CHART_COLORS.textMuted },
-          grid: { color: CHART_COLORS.borderGrid }
+          grid: { color: CHART_COLORS.borderGrid },
         },
         y: {
-          beginAtZero: true,
-          min: 0,
           ticks: {
             color: CHART_COLORS.textMuted,
-            callback: v => 'R$ ' + (v / 1000).toLocaleString('pt-BR') + ' mil'
+            callback: (v) =>
+              "R$ " + (v / 1000).toLocaleString("pt-BR") + " mil",
           },
-          grid: { color: CHART_COLORS.borderGrid }
-        }
-      }
-    }
+          grid: { color: CHART_COLORS.borderGrid },
+        },
+      },
+    },
   });
 }
-
