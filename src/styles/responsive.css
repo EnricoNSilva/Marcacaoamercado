@@ -1,0 +1,63 @@
+/**
+ * Camada 5: Responsividade & Media Queries
+ * Adaptações para diferentes larguras de viewport.
+ */
+
+@media (max-width: 900px) {
+  .app-header .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-quick-stats {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .split-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .app-container {
+    padding: 0 10px;
+  }
+
+  .card {
+    padding: 14px;
+    border-radius: var(--radius-md);
+  }
+
+  .kpi-value {
+    font-size: 17px;
+  }
+
+  .app-tabs {
+    margin: 12px 0 16px;
+  }
+
+  .tab-button {
+    padding: 8px 12px;
+    font-size: 12.5px;
+  }
+
+  .chart-wrapper {
+    height: 300px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .app-container {
+    max-width: 1560px;
+  }
+
+  .chart-wrapper {
+    height: 420px;
+  }
+}

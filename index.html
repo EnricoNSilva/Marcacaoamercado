@@ -1,535 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Simulador Tesouro RENDA+ 2065 | Análise de Carrego & Marcação a Mercado</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
-<style>
-  /* ==========================================================================
-     DESIGN SYSTEM & FUNDAMENTOS DE IHC (Interação Humano-Computador)
-     - Nielsen: Visibilidade do status, consistência, prevenção de erros
-     - Norman: Affordance clara, mapeamento natural, feedback imediato
-     - Shneiderman: Redução de carga cognitiva, fechamento de tarefas
-     ========================================================================== */
-  :root {
-    --bg-base: #090d16;
-    --bg-surface: #111726;
-    --bg-elevated: #182238;
-    --bg-card: #141c2e;
-    --border-subtle: #1e2c47;
-    --border-active: #3b82f6;
-    
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
-    --text-muted: #64748b;
-    
-    --brand-primary: #3b82f6;
-    --brand-hover: #2563eb;
-    --brand-glow: rgba(59, 130, 246, 0.25);
-    
-    --semantic-success: #10b981;
-    --semantic-success-bg: rgba(16, 185, 129, 0.12);
-    --semantic-danger: #ef4444;
-    --semantic-danger-bg: rgba(239, 68, 68, 0.12);
-    --semantic-warning: #f59e0b;
-    --semantic-warning-bg: rgba(245, 158, 11, 0.12);
-    --semantic-info: #06b6d4;
-    
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 14px;
-    
-    --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  }
-
-  /* RESET REFORÇADO ANTI-OVERFLOW */
-  *, *::before, *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  html, body {
-    width: 100%;
-    max-width: 100vw;
-    overflow-x: hidden;
-    background-color: var(--bg-base);
-    color: var(--text-primary);
-    font-family: var(--font-sans);
-    font-size: 14px;
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  /* CONTAINER PRINCIPAL RESPONSIVO */
-  .app-container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px 24px 16px;
-    min-width: 0;
-  }
-
-  /* HEADER ULTRA-SLIM & BRANDING (IHC: MÁXIMO APROVEITAMENTO VERTICAL) */
-  header.app-header {
-    background: var(--bg-surface);
-    border-bottom: 1px solid var(--border-subtle);
-    padding: 8px 0;
-    margin-bottom: 12px;
-  }
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 12px;
-  }
-  .header-titles h1 {
-    font-size: 15px;
-    font-weight: 700;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0;
-  }
-  .header-titles h1 .badge-title {
-    font-size: 10px;
-    background: var(--brand-glow);
-    color: #60a5fa;
-    border: 1px solid rgba(96, 165, 250, 0.3);
-    padding: 1px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-  }
-  .header-quick-stats {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-  .stat-pill {
-    font-size: 12px;
-    color: var(--text-secondary);
-    background: var(--bg-elevated);
-    padding: 3px 9px;
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border-subtle);
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .stat-pill .lbl { color: var(--text-muted); font-size: 11px; }
-  .stat-pill strong { font-feature-settings: "tnum"; color: #fff; }
-
-  /* NAVEGAÇÃO POR ABAS (PROGRESSIVE DISCLOSURE) */
-  nav.app-tabs {
-    display: flex;
-    gap: 4px;
-    background: var(--bg-surface);
-    padding: 3px;
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border-subtle);
-    margin-bottom: 14px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  nav.app-tabs::-webkit-scrollbar { display: none; }
-  
-  .tab-button {
-    flex: 1;
-    min-width: 115px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    padding: 6px 10px;
-    font-size: 12px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    transition: all 0.18s ease;
-    white-space: nowrap;
-  }
-  .tab-button:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.04);
-  }
-  .tab-button.active {
-    background: var(--brand-primary);
-    color: #fff;
-    box-shadow: 0 2px 8px var(--brand-glow);
-  }
-
-  /* ÁREAS DE CONTEÚDO (PAINÉIS) */
-  .tab-pane {
-    display: none;
-    min-width: 0;
-    animation: fadeIn 0.2s ease;
-  }
-  .tab-pane.active {
-    display: block;
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(3px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* CARDS & CONTAINERS */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-lg);
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-card);
-    min-width: 0;
-    max-width: 100%;
-  }
-  .card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 16px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    padding-bottom: 12px;
-  }
-  .card-header h2 {
-    font-size: 16px;
-    font-weight: 700;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-header .desc {
-    font-size: 12.5px;
-    color: var(--text-secondary);
-    margin-top: 3px;
-  }
-
-  /* KPI METRIC CARDS */
-  .kpi-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
-    margin-bottom: 18px;
-    min-width: 0;
-  }
-  .kpi-card {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 12px 14px;
-    min-width: 0;
-  }
-  .kpi-card .kpi-label {
-    font-size: 11.5px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  .kpi-card .kpi-value {
-    font-size: 18px;
-    font-weight: 700;
-    color: #fff;
-    margin-top: 4px;
-    font-feature-settings: "tnum";
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .kpi-card .kpi-sub {
-    font-size: 11.5px;
-    color: var(--text-muted);
-    margin-top: 3px;
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-  .pos { color: var(--semantic-success) !important; }
-  .neg { color: var(--semantic-danger) !important; }
-  .warn { color: var(--semantic-warning) !important; }
-  .info { color: var(--semantic-info) !important; }
-
-  /* FORMULÁRIOS & CONTROLES */
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 14px;
-    min-width: 0;
-  }
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    min-width: 0;
-  }
-  .form-group label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text-secondary);
-  }
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: 100%;
-    max-width: 100%;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-primary);
-    border-radius: var(--radius-sm);
-    padding: 8px 10px;
-    font-size: 13.5px;
-    font-family: inherit;
-    transition: border-color 0.15s ease;
-  }
-  input[type="text"]:focus,
-  input[type="number"]:focus,
-  input[type="date"]:focus,
-  select:focus {
-    outline: none;
-    border-color: var(--brand-primary);
-    box-shadow: 0 0 0 2px var(--brand-glow);
-  }
-  input[type="date"] { color-scheme: dark; }
-
-  /* SLIDER CONTROL BOX (IHC: Controle + Feedback direto) */
-  .control-box {
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    min-width: 0;
-  }
-  .control-box-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-  .control-box-header label {
-    font-size: 12.5px;
-    font-weight: 600;
-    color: var(--text-primary);
-  }
-  .control-box-header .val-display {
-    font-size: 13.5px;
-    font-weight: 700;
-    color: var(--brand-primary);
-    background: rgba(59, 130, 246, 0.1);
-    padding: 2px 8px;
-    border-radius: var(--radius-sm);
-  }
-  input[type="range"] {
-    width: 100%;
-    height: 6px;
-    background: var(--bg-elevated);
-    border-radius: 3px;
-    outline: none;
-    accent-color: var(--brand-primary);
-    cursor: pointer;
-    margin: 6px 0;
-  }
-  .range-scale {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  /* BOTÕES ERGONÔMICOS */
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 8px 14px;
-    font-size: 13px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s ease;
-    white-space: nowrap;
-  }
-  .btn-primary {
-    background: var(--brand-primary);
-    color: #fff;
-  }
-  .btn-primary:hover {
-    background: var(--brand-hover);
-  }
-  .btn-secondary {
-    background: var(--bg-elevated);
-    border: 1px solid var(--border-subtle);
-    color: var(--text-secondary);
-  }
-  .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.08);
-    color: #fff;
-  }
-  .btn-sm {
-    padding: 4px 8px;
-    font-size: 11.5px;
-  }
-  .btn-danger-outline {
-    background: transparent;
-    border: 1px solid rgba(239, 68, 68, 0.35);
-    color: var(--semantic-danger);
-  }
-  .btn-danger-outline:hover {
-    background: var(--semantic-danger);
-    color: #fff;
-  }
-  .btn-group {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  /* ISOLAMENTO ABSOLUTO DE TABELAS (ANTI-BLOWOUT) */
-  .table-responsive-container {
-    width: 100%;
-    max-width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    background: var(--bg-surface);
-    display: block;
-    min-width: 0;
-  }
-  table.data-table {
-    width: 100%;
-    min-width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    text-align: right;
-  }
-  table.data-table th {
-    background: var(--bg-elevated);
-    color: var(--text-secondary);
-    font-weight: 600;
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border-subtle);
-    white-space: nowrap;
-    position: sticky;
-    top: 0;
-    z-index: 1;
-  }
-  table.data-table td {
-    padding: 9px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-    white-space: nowrap;
-    font-feature-settings: "tnum";
-  }
-  table.data-table tr:last-child td {
-    border-bottom: none;
-  }
-  table.data-table th:first-child,
-  table.data-table td:first-child {
-    text-align: left;
-  }
-  table.data-table tr.total-row td {
-    background: rgba(59, 130, 246, 0.06);
-    font-weight: 700;
-    border-top: 2px solid var(--border-subtle);
-  }
-  table.data-table tr:hover:not(.total-row) td {
-    background: rgba(255, 255, 255, 0.02);
-  }
-  table.data-table td input {
-    background: var(--bg-card);
-    padding: 4px 6px;
-    font-size: 12.5px;
-    width: 110px;
-  }
-
-  /* MATRIZ DE CENÁRIOS COM HEATMAP COMPACTO */
-  .matrix-cell {
-    border-radius: var(--radius-sm);
-    padding: 6px 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 95px;
-  }
-  .matrix-cell .v-liq {
-    font-weight: 700;
-    font-size: 12px;
-  }
-  .matrix-cell .v-pct {
-    font-size: 10.5px;
-    opacity: 0.85;
-    margin-top: 1px;
-  }
-
-  /* CHART WRAPPER SEGURO */
-  .chart-wrapper {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    height: 380px;
-    min-width: 0;
-  }
-  .chart-wrapper.compact {
-    height: 160px;
-  }
-
-  /* CAIXAS DE FEEDBACK E CALLOUTS */
-  .callout {
-    background: var(--bg-surface);
-    border-left: 3px solid var(--brand-primary);
-    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-    padding: 12px 14px;
-    font-size: 12.5px;
-    color: var(--text-secondary);
-    margin-top: 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-  }
-  .callout strong { color: var(--text-primary); }
-  .callout.success { border-left-color: var(--semantic-success); }
-  .callout.warning { border-left-color: var(--semantic-warning); }
-
-  /* LAYOUT COLUNAS SIMULADOR (2 COLUNAS EQUILIBRADAS) */
-  .split-layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1.85fr);
-    gap: 20px;
-    min-width: 0;
-  }
-  @media (max-width: 900px) {
-    .split-layout {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-size: 11px;
-    font-weight: 600;
-  }
-  .badge-neutral { background: var(--bg-elevated); color: var(--text-secondary); }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador Tesouro RENDA+ 2065 | Análise de Carrego & Marcação a Mercado</title>
+  <link rel="icon" href="data:,">
+  <script src="/vendor/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -558,21 +34,21 @@
 
 <main class="app-container">
 
-  <!-- NAVEGAÇÃO IHC POR ABAS (REDUÇÃO DE CARGA COGNITIVA) -->
-  <nav class="app-tabs">
-    <button class="tab-button active" data-tab="tab-posicao">
+  <!-- NAVEGAÇÃO IHC POR ABAS -->
+  <nav class="app-tabs" role="tablist">
+    <button class="tab-button active" data-tab="tab-posicao" role="tab" aria-selected="true">
       <span>📊</span> Posição Atual
     </button>
-    <button class="tab-button" data-tab="tab-simulador">
+    <button class="tab-button" data-tab="tab-simulador" role="tab" aria-selected="false">
       <span>🎯</span> Simulador de Venda
     </button>
-    <button class="tab-button" data-tab="tab-grafico">
+    <button class="tab-button" data-tab="tab-grafico" role="tab" aria-selected="false">
       <span>📈</span> Projeção & Gráfico
     </button>
-    <button class="tab-button" data-tab="tab-matriz">
+    <button class="tab-button" data-tab="tab-matriz" role="tab" aria-selected="false">
       <span>🗺️</span> Matriz de Cenários
     </button>
-    <button class="tab-button" data-tab="tab-config">
+    <button class="tab-button" data-tab="tab-config" role="tab" aria-selected="false">
       <span>⚙️</span> Premissas & Custos
     </button>
   </nav>
@@ -580,7 +56,7 @@
   <!-- ==========================================
        ABA 1: POSIÇÃO ATUAL (CARTEIRA)
        ========================================== -->
-  <div class="tab-pane active" id="tab-posicao">
+  <div class="tab-pane active" id="tab-posicao" role="tabpanel">
     <div class="kpi-grid" id="posKpis"></div>
 
     <div class="card">
@@ -600,165 +76,158 @@
           <thead>
             <tr>
               <th>Data Compra</th>
-              <th>Taxa Contratada</th>
-              <th>PU Compra (R$)</th>
-              <th>Qtd</th>
+              <th>Taxa Compra</th>
+              <th>PU Compra</th>
+              <th>Qtd.</th>
               <th>Valor Investido</th>
               <th>Dias</th>
               <th>Valor Bruto</th>
               <th>Custódia B3</th>
-              <th>IR Retido (App)</th>
-              <th>Líquido App</th>
+              <th>IR Retido</th>
+              <th>Líquido (App)</th>
               <th>Ações</th>
             </tr>
           </thead>
           <tbody></tbody>
         </table>
       </div>
-
-      <div class="callout success">
-        <strong>Conferência com o App do Tesouro:</strong> O "Líquido App" reflete exatamente a tela do Tesouro Direto (Valor Bruto menos IR). A Custódia B3 de resgate antecipado incide na liquidação da venda (*pro rata die*).
-      </div>
     </div>
   </div>
 
   <!-- ==========================================
-       ABA 2: SIMULADOR DE VENDA & TRAJETÓRIA
+       ABA 2: SIMULADOR DE VENDA ANTECIPADA
        ========================================== -->
-  <div class="tab-pane" id="tab-simulador">
+  <div class="tab-pane" id="tab-simulador" role="tabpanel">
     <div class="split-layout">
-      <!-- Painel de Controles Ergonômicos -->
-      <div class="card" style="margin-bottom:0">
+      
+      <!-- COLUNA DA ESQUERDA: PARÂMETROS E SLIDERS -->
+      <div class="card">
         <div class="card-header">
           <div>
-            <h2>Parâmetros da Venda</h2>
-            <div class="desc">Ajuste os sliders para simular o comportamento da curva de juros.</div>
+            <h2>Cenário de Venda Futura</h2>
+            <div class="desc">Ajuste os parâmetros para simular a marcação a mercado.</div>
           </div>
         </div>
 
-        <div style="display:flex;flex-direction:column;gap:14px;">
-          <!-- Slider Prazo de Venda -->
-          <div class="control-box">
-            <div class="control-box-header">
-              <label>Data / Prazo de Venda</label>
-              <span class="val-display" id="simYearsDisplay">daqui a 1 ano</span>
-            </div>
-            <input type="range" id="simYearsSlider" min="0" max="38" step="0.083333">
-            <div class="range-scale">
-              <span>Hoje</span>
-              <span id="simDateText" style="color:var(--text-primary);font-weight:600">--/--/----</span>
-              <span>2064</span>
-            </div>
+        <!-- Slider 1: Prazo da Venda -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Prazo até o Resgate</span>
+            <span class="slider-value-badge" id="simYearsDisplay">daqui a 1,0 ano(s)</span>
           </div>
-
-          <!-- Slider Taxa Alvo de Mercado -->
-          <div class="control-box">
-            <div class="control-box-header">
-              <label>Taxa de Mercado Alvo</label>
-              <span class="val-display" id="targetRateDisplay">IPCA + 6,55%</span>
-            </div>
-            <input type="range" id="targetRateSlider" min="3.5" max="9.5" step="0.05">
-            <div class="range-scale">
-              <span>IPCA + 3,5%</span>
-              <span id="rateNowTag" class="badge badge-neutral">Atual</span>
-              <span>IPCA + 9,5%</span>
-            </div>
+          <input type="range" class="slider-control" id="simYearsSlider" min="0.1" max="15" step="0.1" value="1.0">
+          <div class="scale-ticks">
+            <span>Hoje</span>
+            <span>5 anos</span>
+            <span>10 anos</span>
+            <span>15 anos</span>
           </div>
-
-          <!-- Slider Convergência Gradual -->
-          <div class="control-box">
-            <div class="control-box-header">
-              <label>Convergência da Taxa</label>
-              <span class="val-display" id="convMonthsDisplay">24 meses</span>
-            </div>
-            <input type="range" id="convMonthsSlider" min="0" max="96" step="1">
-            <div class="range-scale">
-              <span>0 (Choque Imediato)</span>
-              <span>48 meses</span>
-              <span>96 meses</span>
-            </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;">
+            Data estimada da venda: <strong id="simDateText" style="color:var(--text-primary)">--</strong>
           </div>
+        </div>
 
-          <!-- Slider IPCA Projetado -->
-          <div class="control-box">
-            <div class="control-box-header">
-              <label>Inflação Projetada (IPCA)</label>
-              <span class="val-display" id="ipcaDisplay">4,5% a.a.</span>
-            </div>
-            <input type="range" id="ipcaSlider" min="2.0" max="10.0" step="0.1">
-            <div class="range-scale">
-              <span>2,0% a.a.</span>
-              <span>Meta 4,5%</span>
-              <span>10,0% a.a.</span>
-            </div>
+        <!-- Slider 2: Taxa Alvo Futura -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Taxa Real do RENDA+ na Venda</span>
+            <span class="slider-value-badge" id="targetRateDisplay">IPCA + 6,55%</span>
           </div>
-
-          <!-- Quantidade e Presets Rápidos -->
-          <div class="control-box">
-            <div class="control-box-header">
-              <label>Qtd a Resgatar</label>
-              <span class="val-display" id="simQtyDisplay">140,33 títulos</span>
-            </div>
-            <div style="display:flex;gap:8px;margin-top:4px">
-              <input type="number" id="simQtyInput" step="0.01" style="flex:1">
-              <button class="btn btn-secondary btn-sm" id="btnSellAll">Vender Tudo</button>
-            </div>
+          <input type="range" class="slider-control" id="targetRateSlider" min="3.0" max="10.0" step="0.05" value="6.55">
+          <div class="scale-ticks">
+            <span>3,0% (Super Lucro)</span>
+            <span>6,55% (Atual)</span>
+            <span>10,0% (Estresse)</span>
           </div>
+          <div class="btn-group" style="margin-top:8px;">
+            <button class="btn btn-secondary btn-sm" id="presetNow">Taxa Hoje</button>
+            <button class="btn btn-secondary btn-sm" id="presetAvg">Média Carteira</button>
+            <button class="btn btn-secondary btn-sm" id="presetLowRate">Queda (5%)</button>
+          </div>
+        </div>
 
-          <div class="btn-group">
-            <button class="btn btn-secondary btn-sm" id="presetNow">Taxa Atual</button>
-            <button class="btn btn-secondary btn-sm" id="presetAvg">Minha Taxa Média</button>
-            <button class="btn btn-secondary btn-sm" id="presetLowRate">Queda de Juros (5,0%)</button>
+        <!-- Slider 3: Velocidade de Convergência -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">Trajetória / Convergência da Taxa</span>
+            <span class="slider-value-badge" id="convMonthsDisplay">24 meses</span>
+          </div>
+          <input type="range" class="slider-control" id="convMonthsSlider" min="0" max="60" step="1" value="24">
+          <div class="scale-ticks">
+            <span>0 (Choque Imediato)</span>
+            <span>24 meses</span>
+            <span>60 meses (5 anos)</span>
+          </div>
+        </div>
+
+        <!-- Slider 4: IPCA Projetado -->
+        <div class="slider-group">
+          <div class="slider-header">
+            <span class="slider-label">IPCA Futuro Projetado</span>
+            <span class="slider-value-badge" id="ipcaDisplay">4,5% a.a.</span>
+          </div>
+          <input type="range" class="slider-control" id="ipcaSlider" min="2.0" max="10.0" step="0.1" value="4.5">
+          <div class="scale-ticks">
+            <span>2%</span>
+            <span>4,5%</span>
+            <span>7%</span>
+            <span>10%</span>
+          </div>
+        </div>
+
+        <!-- Input: Quantidade a Vender -->
+        <div class="form-group" style="margin-top:14px;">
+          <label>Quantidade de Títulos a Resgatar</label>
+          <div style="display:flex;gap:8px;">
+            <input type="number" step="0.01" id="simQtyInput" placeholder="Vender tudo (140,33)" style="flex:1;">
+            <button class="btn btn-secondary btn-sm" id="btnSellAll">Vender Tudo</button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">
+            Simulando venda de: <strong id="simQtyDisplay" style="color:var(--text-primary)">--</strong>
           </div>
         </div>
       </div>
 
-      <!-- Resultados da Simulação -->
-      <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+      <!-- COLUNA DA DIREITA: RESULTADOS E KPIS DO SIMULADOR -->
+      <div>
         <div class="kpi-grid" id="simKpis"></div>
+        <div id="simDecompBox" style="margin-bottom:20px;"></div>
 
-        <div class="card" style="margin-bottom:0">
+        <div class="card">
           <div class="card-header">
             <div>
-              <h2>Decomposição do Retorno</h2>
-              <div class="desc">Entenda quanto do seu ganho vem do tempo (carrego) vs oscilação de mercado.</div>
+              <h2>Trajetória Projetada da Taxa</h2>
+              <div class="desc">Evolução da taxa de mercado ao longo dos meses.</div>
             </div>
           </div>
-          <div id="simDecompBox"></div>
-
-          <div style="margin-top:16px">
-            <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">
-              Evolução da Taxa de Venda ao Longo do Tempo (com convergência e spread)
-            </div>
-            <div class="chart-wrapper compact">
-              <canvas id="rateTrajectoryChart"></canvas>
-            </div>
+          <div class="chart-wrapper compact">
+            <canvas id="rateTrajectoryChart"></canvas>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Tabela PEPS de Liquidação da Simulação -->
-    <div class="card" style="margin-top:20px">
+    <div class="card">
       <div class="card-header">
         <div>
-          <h2>Demonstrativo de Liquidação por Lote (PEPS)</h2>
-          <div class="desc">Lotes mais antigos são resgatados primeiro, reduzindo a alíquota de IR.</div>
+          <h2>Demonstrativo de Liquidação PEPS no Resgate</h2>
+          <div class="desc">Abertura lote a lote dos impostos, custos e ganho líquido no momento da venda projetada.</div>
         </div>
       </div>
       <div class="table-responsive-container">
         <table class="data-table" id="simTable">
           <thead>
             <tr>
-              <th>Lote / Data</th>
+              <th>Lote</th>
               <th>Taxa Compra</th>
-              <th>Qtd Vendida</th>
-              <th>Investido</th>
-              <th>Bruto Venda</th>
+              <th>Qtd. Vendida</th>
+              <th>Custo Lote</th>
+              <th>Valor Bruto</th>
               <th>Custódia B3</th>
-              <th>IR</th>
+              <th>IR Retido</th>
               <th>Líquido Final</th>
-              <th>Lucro Líquido</th>
+              <th>Ganho Líquido</th>
             </tr>
           </thead>
           <tbody></tbody>
@@ -768,23 +237,23 @@
   </div>
 
   <!-- ==========================================
-       ABA 3: GRÁFICO DE PROJEÇÃO NO TEMPO
+       ABA 3: PROJEÇÃO & GRÁFICO DE LONGO PRAZO
        ========================================== -->
-  <div class="tab-pane" id="tab-grafico">
+  <div class="tab-pane" id="tab-grafico" role="tabpanel">
     <div class="card">
       <div class="card-header">
         <div>
-          <h2>Projeção Temporal de Patrimônio</h2>
-          <div class="desc">Curvas de evolução do saldo sob diferentes cenários de taxa mantida constante vs carrego puro.</div>
+          <h2>Evolução Patrimonial: Marcação a Mercado vs. Carrego Puro</h2>
+          <div class="desc">Projeção do saldo da sua carteira em diferentes cenários de taxa ao longo dos anos.</div>
         </div>
         <div class="btn-group">
-          <select id="chartMetricSelect" style="width:auto">
-            <option value="liq">Saldo Líquido (após IR & Custódia)</option>
-            <option value="bruto">Saldo Bruto</option>
+          <select id="chartMetricSelect" class="btn btn-secondary btn-sm">
+            <option value="liq">Exibir: Saldo Líquido</option>
+            <option value="bruto">Exibir: Saldo Bruto</option>
           </select>
-          <select id="chartRealSelect" style="width:auto">
-            <option value="nom">Valores Nominais (R$ do Futuro)</option>
-            <option value="real">Valores Reais (Descontado o IPCA)</option>
+          <select id="chartRealSelect" class="btn btn-secondary btn-sm">
+            <option value="nom">Valores Nominais</option>
+            <option value="real">Valores Reais (Descontado IPCA)</option>
           </select>
         </div>
       </div>
@@ -793,8 +262,12 @@
         <canvas id="mainChart"></canvas>
       </div>
 
-      <div class="callout">
-        <strong>Linha Branca Tracejada (Carrego Puro):</strong> Representa o valor garantido caso você mantenha o título até a conversão sem depender de marcação a mercado (cada lote rentabilizando sua taxa pactuada).
+      <div class="callout" style="margin-top:16px;">
+        <strong>Leitura das Curvas:</strong>
+        • <strong>Linha Branca Tracejada (Carrego Puro):</strong> valor que você acumularia rendendo a taxa de compra de cada lote (sem ganho/perda de marcação a mercado).<br>
+        • <strong>Linha Azul (Cenário Alvo):</strong> valor real se a taxa atingir a projeção configurada no simulador.<br>
+        • <strong>Linha Verde (Queda 5%):</strong> valorização antecipada máxima proporcionada pela marcação a mercado.<br>
+        • <strong>Linha Vermelha (Estresse 8%):</strong> efeito temporário de desvalorização se as taxas do país subirem.
       </div>
     </div>
   </div>
@@ -802,7 +275,7 @@
   <!-- ==========================================
        ABA 4: MATRIZ DE CENÁRIOS (STRESS TEST)
        ========================================== -->
-  <div class="tab-pane" id="tab-matriz">
+  <div class="tab-pane" id="tab-matriz" role="tabpanel">
     <div class="card">
       <div class="card-header">
         <div>
@@ -815,7 +288,7 @@
         <table class="data-table" id="matrixTable"></table>
       </div>
 
-      <div class="card-header" style="margin-top:24px;border-top:1px solid var(--border-subtle);padding-top:16px">
+      <div class="card-header" style="margin-top:24px;border-top:1px solid var(--border-subtle);padding-top:16px;">
         <div>
           <h2>Sensibilidade Imediata (Duration Modificada)</h2>
           <div class="desc">Impacto de um choque repentino de taxa hoje na sua carteira.</div>
@@ -824,19 +297,19 @@
       <div class="table-responsive-container">
         <table class="data-table" id="sensTable"></table>
       </div>
-      <div id="durationExplanation" style="font-size:12px;color:var(--text-secondary);margin-top:10px"></div>
+      <div id="durationExplanation" style="font-size:12px;color:var(--text-secondary);margin-top:10px;"></div>
     </div>
   </div>
 
   <!-- ==========================================
        ABA 5: PREMISSAS, CUSTOS & METODOLOGIA
        ========================================== -->
-  <div class="tab-pane" id="tab-config">
+  <div class="tab-pane" id="tab-config" role="tabpanel">
     <div class="card">
       <div class="card-header">
         <div>
           <h2>Calibração de Mercado Atual</h2>
-          <div class="desc">Alinhe com os dados exibidos no site ou aplicativo do Tesouro Direto.</div>
+          <div class="desc">Alinhe com os dados exibidos no site ou aplicativo oficial do Tesouro Direto.</div>
         </div>
       </div>
 
@@ -851,15 +324,19 @@
         </div>
         <div class="form-group">
           <label>Taxa de Resgate Atual (IPCA + % a.a.)</label>
-          <input type="number" step="0.01" id="cfgRefRate" placeholder="Calculada automaticamente">
+          <input type="number" step="0.01" id="cfgRefRate" placeholder="Calculada automaticamente (~6,55%)">
         </div>
         <div class="form-group">
-          <label>Spread Compra/Venda (p.p. na taxa de resgate)</label>
+          <label>Spread Compra/Venda (p.p. na taxa)</label>
           <input type="number" step="0.01" id="cfgSpread" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>IPCA da Calibração (Última Compra até Hoje, % a.a.)</label>
+          <input type="number" step="0.1" id="cfgIpcaCal" value="4.5">
         </div>
       </div>
 
-      <div class="card-header" style="margin-top:24px;border-top:1px solid var(--border-subtle);padding-top:16px">
+      <div class="card-header" style="margin-top:24px;border-top:1px solid var(--border-subtle);padding-top:16px;">
         <div>
           <h2>Taxa de Custódia B3 na Venda Antecipada</h2>
           <div class="desc">Configuração da cobrança regressiva pro rata die aplicada pela B3.</div>
@@ -870,7 +347,7 @@
         <div class="form-group">
           <label>Modelo de Aplicação da Custódia</label>
           <select id="cfgCustMode">
-            <option value="single">Alíquota da faixa do tempo total (Padrão Tesouro)</option>
+            <option value="single">Alíquota da faixa do prazo total</option>
             <option value="marginal">Escalonada por faixa marginal</option>
             <option value="none">Isenta / Não descontar</option>
           </select>
@@ -889,7 +366,7 @@
         </div>
       </div>
 
-      <div class="callout warning" style="margin-top:20px">
+      <div class="callout warning" style="margin-top:20px;">
         <strong>Metodologia do Título NTN-B1 (RENDA+ 2065):</strong>
         <p>1. O título amortiza em 240 parcelas mensais iguais entre 15/01/2065 e 15/12/2084.</p>
         <p>2. Preço de Mercado: <code>PU = F(t) × Σ (1 + r)^(-du/252)</code>, onde <code>du</code> são dias úteis seguindo o calendário oficial de feriados nacionais da ANBIMA.</p>
@@ -900,694 +377,6 @@
 
 </main>
 
-<script>
-/* ==========================================================================
-   MOTOR FINANCEIRO & MATEMÁTICO DO TESOURO RENDA+ 2065
-   ========================================================================== */
-const MS_DAY = 86400000;
-const toDayNum = iso => {
-  if (!iso) return NaN;
-  const [y, m, d] = String(iso).split('-').map(Number);
-  return Math.round(Date.UTC(y, m - 1, d) / MS_DAY);
-};
-const dayNumToIso = dn => new Date(dn * MS_DAY).toISOString().slice(0, 10);
-const formatBRLDate = dn => {
-  const d = new Date(dn * MS_DAY);
-  return String(d.getUTCDate()).padStart(2, '0') + '/' +
-         String(d.getUTCMonth() + 1).padStart(2, '0') + '/' +
-         d.getUTCFullYear();
-};
-const addMonthsDN = (dn, m) => {
-  const d = new Date(dn * MS_DAY);
-  return Math.round(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + m, d.getUTCDate()) / MS_DAY);
-};
-const addYearsDN = (dn, y) => addMonthsDN(dn, Math.round(y * 12));
-
-/* CALENDÁRIO ANBIMA (DIAS ÚTEIS / 252) */
-function getEaster(y) {
-  const a = y % 19, b = Math.floor(y / 100), c = y % 100, d = Math.floor(b / 4), e = b % 4;
-  const f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3);
-  const h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4;
-  const l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451);
-  return Math.round(Date.UTC(y, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1) / MS_DAY);
-}
-const CAL_START = toDayNum('2000-01-01'), CAL_END = toDayNum('2090-12-31');
-const HOLIDAYS = new Set();
-for (let y = 2000; y <= 2090; y++) {
-  [[1,1],[4,21],[5,1],[9,7],[10,12],[11,2],[11,15],[12,25]].forEach(([m, d]) => {
-    HOLIDAYS.add(toDayNum(`${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`));
-  });
-  if (y >= 2024) HOLIDAYS.add(toDayNum(`${y}-11-20`)); // Dia da Consciência Negra
-  const e = getEaster(y);
-  [e - 48, e - 47, e - 2, e + 60].forEach(h => HOLIDAYS.add(h));
-}
-const CUM_BUS_DAYS = new Int32Array(CAL_END - CAL_START + 2);
-for (let n = CAL_START; n <= CAL_END; n++) {
-  const dayOfWeek = new Date(n * MS_DAY).getUTCDay();
-  const isBusDay = dayOfWeek !== 0 && dayOfWeek !== 6 && !HOLIDAYS.has(n);
-  CUM_BUS_DAYS[n - CAL_START + 1] = CUM_BUS_DAYS[n - CAL_START] + (isBusDay ? 1 : 0);
-}
-const getBusDays = (a, b) => CUM_BUS_DAYS[b - CAL_START] - CUM_BUS_DAYS[a - CAL_START];
-const nextBusDay = dn => {
-  while (true) {
-    const dow = new Date(dn * MS_DAY).getUTCDay();
-    if (dow !== 0 && dow !== 6 && !HOLIDAYS.has(dn)) return dn;
-    dn++;
-  }
-};
-
-/* FLUXOS NTN-B1 REND A+ 2065 (240 PARCELAS) */
-const CASH_FLOWS = [];
-for (let k = 0; k < 240; k++) {
-  const year = 2065 + Math.floor(k / 12);
-  const month = (k % 12) + 1;
-  CASH_FLOWS.push(nextBusDay(toDayNum(`${year}-${String(month).padStart(2,'0')}-15`)));
-}
-const FIRST_FLOW = CASH_FLOWS[0];
-const FLOW_OFFSETS = CASH_FLOWS.map(f => getBusDays(FIRST_FLOW, f));
-const MAX_SIM_DATE = FIRST_FLOW - 1;
-
-function calcAnnuityFactor(t, r) {
-  const baseDiscount = Math.pow(1 + r, -getBusDays(t, FIRST_FLOW) / 252);
-  let sumFlows = 0;
-  for (let i = 0; i < 240; i++) {
-    sumFlows += Math.pow(1 + r, -FLOW_OFFSETS[i] / 252);
-  }
-  return baseDiscount * sumFlows;
-}
-
-const trunc2 = x => Math.floor(x * 100 + 1e-6) / 100;
-const fmtBRL = v => (v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-const fmtPct = (v, d = 2) => ((v || 0) * 100).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d }) + '%';
-const fmtNum = (v, d = 2) => (v || 0).toLocaleString('pt-BR', { minimumFractionDigits: d, maximumFractionDigits: d });
-
-/* ESTADO GLOBAL SINCRONIZADO */
-const DEFAULT_STATE = {
-  refDate: '2026-10-05',
-  refPrice: 243.38,
-  refRate: '',
-  spread: 0,
-  ipca: 4.5,
-  custMode: 'single',
-  cust1: 0.50,
-  cust2: 0.20,
-  cust3: 0.10,
-  targetRate: 6.55,
-  convMonths: 24,
-  simYears: 1.0,
-  simQty: '',
-  chartMetric: 'liq',
-  chartReal: 'nom',
-  lots: [
-    { date: '2026-01-23', rate: 6.99, price: 185.02, qty: 25.35 },
-    { date: '2026-03-24', rate: 7.14, price: 177.03, qty: 56.48 },
-    { date: '2026-06-08', rate: 7.27, price: 172.89, qty: 28.92 },
-    { date: '2026-07-30', rate: 7.37, price: 168.02, qty: 29.58 }
-  ]
-};
-
-let STATE = structuredClone(DEFAULT_STATE);
-try {
-  const saved = localStorage.getItem('renda2065_ihc_v1');
-  if (saved) Object.assign(STATE, JSON.parse(saved));
-} catch(e) {}
-const saveState = () => localStorage.setItem('renda2065_ihc_v1', JSON.stringify(STATE));
-
-/* CALIBRAÇÃO DE PREÇO & VNA */
-const MODEL = { refDN: 0, Fref: 0, rNow: 0, pNow: 0 };
-function calibrateModel() {
-  MODEL.refDN = toDayNum(STATE.refDate);
-  const p = Number(STATE.refPrice) || 243.38;
-  MODEL.pNow = p;
-  
-  // Taxa informada ou inferida por busca binária
-  if (STATE.refRate !== '' && !isNaN(Number(STATE.refRate))) {
-    MODEL.rNow = Number(STATE.refRate) / 100;
-  } else {
-    // Estima a partir da última compra e IPCA
-    const anchor = STATE.lots[STATE.lots.length - 1];
-    const anchorDN = toDayNum(anchor.date);
-    const anchorF = (anchor.price / calcAnnuityFactor(anchorDN, anchor.rate / 100)) *
-                    Math.pow(1 + STATE.ipca / 100, getBusDays(anchorDN, MODEL.refDN) / 252);
-    let lo = -0.05, hi = 0.35;
-    for (let i = 0; i < 80; i++) {
-      const mid = (lo + hi) / 2;
-      if (anchorF * calcAnnuityFactor(MODEL.refDN, mid) > p) lo = mid;
-      else hi = mid;
-    }
-    MODEL.rNow = (lo + hi) / 2;
-  }
-  MODEL.Fref = p / calcAnnuityFactor(MODEL.refDN, MODEL.rNow);
-}
-
-function getVNAFactor(t) {
-  const ipca = STATE.ipca / 100;
-  return t >= MODEL.refDN
-    ? MODEL.Fref * Math.pow(1 + ipca, getBusDays(MODEL.refDN, t) / 252)
-    : MODEL.Fref / Math.pow(1 + ipca, getBusDays(t, MODEL.refDN) / 252);
-}
-
-function calcPU(t, r) {
-  if (t === MODEL.refDN && Math.abs(r - MODEL.rNow) < 1e-9) return MODEL.pNow;
-  return trunc2(getVNAFactor(t) * calcAnnuityFactor(t, r));
-}
-
-/* TRIBUTAÇÃO & CUSTÓDIA B3 */
-const IOF_TABLE = [96,93,90,86,83,80,76,73,70,66,63,60,56,53,50,46,43,40,36,33,30,26,23,20,16,13,10,6,3,0];
-function getIRRate(days) {
-  if (days <= 180) return 0.225;
-  if (days <= 360) return 0.20;
-  if (days <= 720) return 0.175;
-  return 0.15;
-}
-function calcCustodyFee(valor, days) {
-  if (STATE.custMode === 'none' || days <= 0 || valor <= 0) return 0;
-  const d10 = 3652.5, d20 = 7305;
-  const c1 = STATE.cust1 / 100, c2 = STATE.cust2 / 100, c3 = STATE.cust3 / 100;
-  let rate;
-  if (STATE.custMode === 'single') {
-    rate = days <= d10 ? c1 : days <= d20 ? c2 : c3;
-    return trunc2(valor * rate * (days / 365.0));
-  } else {
-    const fee1 = Math.min(days, d10) * c1;
-    const fee2 = Math.min(Math.max(days - d10, 0), d10) * c2;
-    const fee3 = Math.max(days - d20, 0) * c3;
-    return trunc2(valor * (fee1 + fee2 + fee3) / 365.0);
-  }
-}
-
-function simulateSell(t, r, qtyToSell = Infinity) {
-  let left = qtyToSell;
-  const parts = [];
-  const activeLots = STATE.lots.map(l => ({ ...l, dn: toDayNum(l.date) })).filter(l => l.dn <= t).sort((a,b) => a.dn - b.dn);
-  const pu = calcPU(t, r);
-  
-  for (const lot of activeLots) {
-    if (left <= 1e-9) break;
-    const q = Math.min(lot.qty, left);
-    left -= q;
-    
-    const bruto = trunc2(q * pu);
-    const custo = trunc2(q * lot.price);
-    const days = t - lot.dn;
-    const cust = calcCustodyFee(bruto, days);
-    const ganho = bruto - custo - cust;
-    const iof = (ganho > 0 && days < 30) ? trunc2(ganho * IOF_TABLE[Math.max(days, 1) - 1] / 100) : 0;
-    const baseIR = Math.max(ganho - iof, 0);
-    const irAliq = getIRRate(days);
-    const ir = trunc2(baseIR * irAliq);
-    
-    // Cálculo estilo App (sem deduzir custódia)
-    const ganhoApp = Math.max(bruto - custo, 0);
-    const irApp = trunc2(ganhoApp * irAliq);
-    
-    parts.push({
-      lot, q, pu, bruto, custo, days, cust, iof, ir, irAliq,
-      liqReal: bruto - cust - iof - ir,
-      liqApp: bruto - iof - irApp
-    });
-  }
-  
-  const sum = k => parts.reduce((acc, p) => acc + p[k], 0);
-  return {
-    parts,
-    q: sum('q'),
-    bruto: sum('bruto'),
-    custo: sum('custo'),
-    cust: sum('cust'),
-    iof: sum('iof'),
-    ir: sum('ir'),
-    liqReal: sum('liqReal'),
-    liqApp: sum('liqApp')
-  };
-}
-
-/* ==========================================================================
-   RENDERIZAÇÃO DA INTERFACE DO USUÁRIO (IHC)
-   ========================================================================== */
-function kpiBox(label, val, sub = '', valClass = '') {
-  return `
-    <div class="kpi-card">
-      <div class="kpi-label">${label}</div>
-      <div class="kpi-value ${valClass}">${val}</div>
-      ${sub ? `<div class="kpi-sub">${sub}</div>` : ''}
-    </div>`;
-}
-
-function renderPosicao() {
-  const res = simulateSell(MODEL.refDN, MODEL.rNow);
-  const lucroApp = res.liqApp - res.custo;
-  const lucroReal = res.liqReal - res.custo;
-  
-  document.getElementById('topLiqApp').textContent = fmtBRL(res.liqApp);
-  document.getElementById('topRateNow').textContent = `IPCA + ${fmtPct(MODEL.rNow)}`;
-  
-  document.getElementById('posKpis').innerHTML = 
-    kpiBox('Total Investido', fmtBRL(res.custo), `${fmtNum(res.q)} títulos · PM ${fmtBRL(res.custo / res.q)}`) +
-    kpiBox('Saldo Bruto Atual', fmtBRL(res.bruto), `PU de Resgate ${fmtBRL(MODEL.pNow)}`) +
-    kpiBox('Saldo Líquido (App)', fmtBRL(res.liqApp), `Lucro ${lucroApp >= 0 ? '+' : ''}${fmtBRL(lucroApp)} (${fmtPct(lucroApp / res.custo)})`, lucroApp >= 0 ? 'pos' : 'neg') +
-    kpiBox('Líquido Real (pós Custódia)', fmtBRL(res.liqReal), `Custódia B3 retida: ${fmtBRL(res.cust)}`, 'pos') +
-    kpiBox('IR Total Retido', fmtBRL(res.bruto - res.liqApp), `Alíquotas de 20% a 22,5%`);
-    
-  const tbody = document.querySelector('#lotsTable tbody');
-  tbody.innerHTML = '';
-  res.parts.slice().reverse().forEach((p, idx) => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${formatBRLDate(p.lot.dn)}</td>
-      <td>IPCA + ${fmtPct(p.lot.rate / 100)}</td>
-      <td>${fmtBRL(p.lot.price)}</td>
-      <td>${fmtNum(p.q)}</td>
-      <td>${fmtBRL(p.custo)}</td>
-      <td>${p.days} d</td>
-      <td>${fmtBRL(p.bruto)}</td>
-      <td>${fmtBRL(p.cust)}</td>
-      <td>${fmtBRL(p.bruto - p.liqApp)} <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span></td>
-      <td class="pos" style="font-weight:700">${fmtBRL(p.liqApp)}</td>
-      <td><button class="btn btn-danger-outline btn-sm" onclick="removeLot(${STATE.lots.length - 1 - idx})">Excluir</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-  
-  const totalRow = document.createElement('tr');
-  totalRow.className = 'total-row';
-  totalRow.innerHTML = `
-    <td>Total</td>
-    <td>--</td>
-    <td>--</td>
-    <td>${fmtNum(res.q)}</td>
-    <td>${fmtBRL(res.custo)}</td>
-    <td>--</td>
-    <td>${fmtBRL(res.bruto)}</td>
-    <td>${fmtBRL(res.cust)}</td>
-    <td>${fmtBRL(res.bruto - res.liqApp)}</td>
-    <td class="pos" style="font-size:14px">${fmtBRL(res.liqApp)}</td>
-    <td>--</td>
-  `;
-  tbody.appendChild(totalRow);
-}
-
-function renderSimulador() {
-  const simDN = Math.min(addYearsDN(MODEL.refDN, STATE.simYears), MAX_SIM_DATE);
-  document.getElementById('simDateText').textContent = formatBRLDate(simDN);
-  document.getElementById('simYearsDisplay').textContent = `daqui a ${fmtNum(STATE.simYears, 1)} ano(s)`;
-  document.getElementById('targetRateDisplay').textContent = `IPCA + ${fmtPct(STATE.targetRate / 100)}`;
-  document.getElementById('convMonthsDisplay').textContent = `${STATE.convMonths} meses`;
-  document.getElementById('ipcaDisplay').textContent = `${fmtNum(STATE.ipca, 1)}% a.a.`;
-  
-  // Cálculo da taxa com convergência no momento simDN
-  const monthsElapsed = (simDN - MODEL.refDN) / 30.4375;
-  const progress = STATE.convMonths <= 0 ? 1 : Math.min(1, Math.max(0, monthsElapsed / STATE.convMonths));
-  const rateAtSale = MODEL.rNow + (STATE.targetRate / 100 - MODEL.rNow) * progress + (STATE.spread / 100);
-  
-  const totalAvailable = STATE.lots.reduce((a, b) => a + b.qty, 0);
-  let qSell = Number(STATE.simQty);
-  if (isNaN(qSell) || qSell <= 0 || qSell > totalAvailable) qSell = totalAvailable;
-  document.getElementById('simQtyDisplay').textContent = `${fmtNum(qSell)} títulos`;
-  
-  const simRes = simulateSell(simDN, rateAtSale, qSell);
-  const nowRes = simulateSell(MODEL.refDN, MODEL.rNow, qSell);
-  const lucroLiq = simRes.liqReal - simRes.custo;
-  const difHoje = simRes.liqReal - nowRes.liqReal;
-  
-  document.getElementById('simKpis').innerHTML =
-    kpiBox('PU Projetado', fmtBRL(calcPU(simDN, rateAtSale)), `Taxa Venda: IPCA + ${fmtPct(rateAtSale)}`) +
-    kpiBox('Saldo Líquido Projetado', fmtBRL(simRes.liqReal), `em R$ de hoje: ${fmtBRL(simRes.liqReal / Math.pow(1 + STATE.ipca/100, (simDN - MODEL.refDN)/365.25))}`, 'pos') +
-    kpiBox('Ganho Líquido Total', `${lucroLiq >= 0 ? '+' : ''}${fmtBRL(lucroLiq)}`, `${fmtPct(lucroLiq / simRes.custo)} sobre investido`, lucroLiq >= 0 ? 'pos' : 'neg') +
-    kpiBox('Comparado a Vender Hoje', `${difHoje >= 0 ? '+' : ''}${fmtBRL(difHoje)}`, `Hoje você teria ${fmtBRL(nowRes.liqReal)}`, difHoje >= 0 ? 'pos' : 'neg');
-    
-  // Decomposição Carrego vs Marcação a Mercado
-  let ganhoCarrego = 0;
-  for (const p of simRes.parts) {
-    const puCarrego = calcPU(simDN, p.lot.rate / 100);
-    ganhoCarrego += (trunc2(p.q * puCarrego) - p.custo);
-  }
-  const ganhoBrutoTotal = simRes.bruto - simRes.custo;
-  const ganhoMarcacao = ganhoBrutoTotal - ganhoCarrego;
-  
-  document.getElementById('simDecompBox').innerHTML = `
-    <div style="background:var(--bg-surface);border:1px solid var(--border-subtle);border-radius:var(--radius-md);padding:14px;">
-      <div style="font-size:13px;color:var(--text-secondary);line-height:1.6">
-        Ganho Bruto Total de <strong>${fmtBRL(ganhoBrutoTotal)}</strong> composto por:<br>
-        • <strong class="pos">${fmtBRL(ganhoCarrego)} de Carrego Puro:</strong> juros contratados de cada lote corrigidos pelo IPCA.<br>
-        • <strong class="${ganhoMarcacao >= 0 ? 'pos' : 'neg'}">${ganhoMarcacao >= 0 ? '+' : ''}${fmtBRL(ganhoMarcacao)} de Marcação a Mercado:</strong> impacto da oscilação da taxa de mercado para IPCA + ${fmtPct(rateAtSale)}.
-      </div>
-    </div>
-  `;
-  
-  // Tabela PEPS de Liquidação
-  const simTbody = document.querySelector('#simTable tbody');
-  simTbody.innerHTML = '';
-  simRes.parts.forEach(p => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${formatBRLDate(p.lot.dn)}</td>
-      <td>IPCA + ${fmtPct(p.lot.rate / 100)}</td>
-      <td>${fmtNum(p.q)}</td>
-      <td>${fmtBRL(p.custo)}</td>
-      <td>${fmtBRL(p.bruto)}</td>
-      <td>${fmtBRL(p.cust)}</td>
-      <td>${fmtBRL(p.ir)}</td>
-      <td class="pos" style="font-weight:700">${fmtBRL(p.liqReal)}</td>
-      <td class="${p.liqReal >= p.custo ? 'pos' : 'neg'}">${p.liqReal >= p.custo ? '+' : ''}${fmtBRL(p.liqReal - p.custo)}</td>
-    `;
-    simTbody.appendChild(tr);
-  });
-  
-  renderRateTrajectoryChart(rateAtSale);
-}
-
-let trajectoryChart = null;
-function renderRateTrajectoryChart(currentSaleRate) {
-  const ctx = document.getElementById('rateTrajectoryChart');
-  if (!ctx || typeof Chart === 'undefined') return;
-  
-  const labels = [];
-  const rates = [];
-  const horizonMonths = Math.max(STATE.convMonths + 12, Math.ceil(STATE.simYears * 12) + 6, 24);
-  
-  for (let m = 0; m <= horizonMonths; m += 2) {
-    labels.push(`Mês ${m}`);
-    const prog = STATE.convMonths <= 0 ? 1 : Math.min(1, m / STATE.convMonths);
-    const r = MODEL.rNow + (STATE.targetRate / 100 - MODEL.rNow) * prog + (STATE.spread / 100);
-    rates.push(r * 100);
-  }
-  
-  if (trajectoryChart) trajectoryChart.destroy();
-  trajectoryChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels,
-      datasets: [{
-        label: 'Taxa de Mercado Projetada',
-        data: rates,
-        borderColor: '#3b82f6',
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
-        fill: true,
-        tension: 0.15,
-        borderWidth: 2,
-        pointRadius: 0
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: { ticks: { color: '#64748b', maxTicksLimit: 8 }, grid: { display: false } },
-        y: { ticks: { color: '#64748b', callback: v => v.toFixed(2) + '%' }, grid: { color: '#1e2c47' } }
-      }
-    }
-  });
-}
-
-let mainChartInstance = null;
-function renderMainChart() {
-  const ctx = document.getElementById('mainChart');
-  if (!ctx || typeof Chart === 'undefined') return;
-  
-  const horizonYears = Math.min(Math.max(STATE.simYears * 1.5, 5), 35);
-  const points = [];
-  const labels = [];
-  
-  for (let y = 0; y <= horizonYears; y += 0.5) {
-    const d = Math.min(addYearsDN(MODEL.refDN, y), MAX_SIM_DATE);
-    points.push(d);
-    labels.push(y === 0 ? 'Hoje' : `${y}a`);
-  }
-  
-  const isReal = STATE.chartReal === 'real';
-  const deflator = d => isReal ? Math.pow(1 + STATE.ipca / 100, (d - MODEL.refDN) / 365.25) : 1;
-  const getVal = (d, r, carry = false) => {
-    if (carry) {
-      let tot = 0;
-      for (const l of STATE.lots) {
-        tot += trunc2(l.qty * calcPU(d, l.rate / 100));
-      }
-      return tot / deflator(d);
-    }
-    const res = simulateSell(d, r);
-    return (STATE.chartMetric === 'bruto' ? res.bruto : res.liqReal) / deflator(d);
-  };
-  
-  const ds = [
-    {
-      label: `Cenário Alvo (IPCA + ${fmtPct(STATE.targetRate / 100)})`,
-      data: points.map(d => getVal(d, STATE.targetRate / 100)),
-      borderColor: '#3b82f6',
-      borderWidth: 3,
-      pointRadius: 0
-    },
-    {
-      label: 'Carrego Puro (Taxa de Compra)',
-      data: points.map(d => getVal(d, 0, true)),
-      borderColor: '#ffffff',
-      borderDash: [5, 4],
-      borderWidth: 2,
-      pointRadius: 0
-    },
-    {
-      label: 'Queda de Juros (IPCA + 5,0%)',
-      data: points.map(d => getVal(d, 0.05)),
-      borderColor: '#10b981',
-      borderWidth: 1.5,
-      pointRadius: 0
-    },
-    {
-      label: 'Estresse / Alta (IPCA + 8,0%)',
-      data: points.map(d => getVal(d, 0.08)),
-      borderColor: '#ef4444',
-      borderWidth: 1.5,
-      pointRadius: 0
-    }
-  ];
-  
-  if (mainChartInstance) mainChartInstance.destroy();
-  mainChartInstance = new Chart(ctx, {
-    type: 'line',
-    data: { labels, datasets: ds },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: { mode: 'index', intersect: false },
-      plugins: {
-        legend: { labels: { color: '#94a3b8', font: { size: 12 } } },
-        tooltip: {
-          callbacks: {
-            label: c => `${c.dataset.label}: ${fmtBRL(c.parsed.y)}`
-          }
-        }
-      },
-      scales: {
-        x: { ticks: { color: '#64748b' }, grid: { color: '#1e2c47' } },
-        y: {
-          ticks: {
-            color: '#64748b',
-            callback: v => 'R$ ' + (v / 1000).toLocaleString('pt-BR') + ' mil'
-          },
-          grid: { color: '#1e2c47' }
-        }
-      }
-    }
-  });
-}
-
-function renderMatrix() {
-  const horizons = [0, 1, 2, 3, 5, 10, 15, 20, 30];
-  const rates = [0.045, 0.05, 0.055, 0.06, 0.065, 0.07, 0.075, 0.08, 0.085];
-  const table = document.getElementById('matrixTable');
-  const nowRes = simulateSell(MODEL.refDN, MODEL.rNow);
-  
-  let html = '<thead><tr><th>Taxa na Venda ↓ / Prazo →</th>';
-  horizons.forEach(h => {
-    html += `<th style="text-align:center">${h === 0 ? 'Hoje' : h + ' ano(s)'}</th>`;
-  });
-  html += '</tr></thead><tbody>';
-  
-  // Linha de Carrego
-  html += '<tr><td><strong>Carrego Puro</strong></td>';
-  horizons.forEach(h => {
-    const d = Math.min(addYearsDN(MODEL.refDN, h), MAX_SIM_DATE);
-    let totBruto = 0;
-    for (const l of STATE.lots) totBruto += trunc2(l.qty * calcPU(d, l.rate / 100));
-    const inv = nowRes.custo;
-    const lucro = totBruto - inv;
-    const bg = lucro >= 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
-    html += `<td><div class="matrix-cell" style="background:${bg}"><span class="v-liq">${fmtBRL(totBruto)}</span><span class="v-pct pos">+${fmtPct(lucro/inv, 1)}</span></div></td>`;
-  });
-  html += '</tr>';
-  
-  // Linhas por Taxa
-  rates.forEach(r => {
-    const isCurrent = Math.abs(r - MODEL.rNow) < 0.0025;
-    html += `<tr><td><strong>IPCA + ${fmtPct(r)}</strong> ${isCurrent ? '<span class="badge badge-neutral">Atual</span>' : ''}</td>`;
-    horizons.forEach(h => {
-      const d = Math.min(addYearsDN(MODEL.refDN, h), MAX_SIM_DATE);
-      const res = simulateSell(d, r);
-      const lucro = res.liqReal - res.custo;
-      const pctGain = lucro / res.custo;
-      const alpha = Math.min(Math.abs(pctGain) / 0.8, 1) * 0.35 + 0.08;
-      const bg = pctGain >= 0 ? `rgba(16, 185, 129, ${alpha})` : `rgba(239, 68, 68, ${alpha})`;
-      html += `<td><div class="matrix-cell" style="background:${bg}"><span class="v-liq">${fmtBRL(res.liqReal)}</span><span class="v-pct ${pctGain>=0?'pos':'neg'}">${pctGain>=0?'+':''}${fmtPct(pctGain, 1)}</span></div></td>`;
-    });
-    html += '</tr>';
-  });
-  
-  table.innerHTML = html + '</tbody>';
-  
-  // Tabela de Sensibilidade
-  const sensTable = document.getElementById('sensTable');
-  const shocks = [-1.0, -0.5, -0.25, -0.1, 0.1, 0.25, 0.5, 1.0];
-  let sHtml = '<thead><tr><th>Choque na Taxa</th>' + shocks.map(s => `<th style="text-align:center">${s > 0 ? '+' : ''}${s.toFixed(2)} p.p.</th>`).join('') + '</tr></thead><tbody>';
-  
-  sHtml += '<tr><td>Taxa Resultante</td>' + shocks.map(s => `<td style="text-align:center">IPCA + ${fmtPct(MODEL.rNow + s/100)}</td>`).join('') + '</tr>';
-  sHtml += '<tr><td>Novo PU</td>' + shocks.map(s => `<td style="text-align:center">${fmtBRL(calcPU(MODEL.refDN, MODEL.rNow + s/100))}</td>`).join('') + '</tr>';
-  sHtml += '<tr><td>Variação Saldo Bruto</td>' + shocks.map(s => {
-    const res = simulateSell(MODEL.refDN, MODEL.rNow + s/100);
-    const dif = res.bruto - nowRes.bruto;
-    return `<td style="text-align:center" class="${dif >= 0 ? 'pos' : 'neg'}">${dif >= 0 ? '+' : ''}${fmtBRL(dif)}</td>`;
-  }).join('') + '</tr></tbody>';
-  sensTable.innerHTML = sHtml;
-  
-  // Duration
-  const eps = 1e-4;
-  const dur = -(Math.log(calcAnnuityFactor(MODEL.refDN, MODEL.rNow + eps)) - Math.log(calcAnnuityFactor(MODEL.refDN, MODEL.rNow - eps))) / (2 * eps);
-  document.getElementById('durationExplanation').innerHTML = `
-    <strong>Duration Modificada Estimada: ≈ ${fmtNum(dur, 1)} anos.</strong> Cada variação de 0,10 p.p. na taxa do título movimenta aproximadamente <strong>${fmtNum(dur * 0.1, 1)}%</strong> do seu valor de mercado.
-  `;
-}
-
-function syncInputs() {
-  document.getElementById('cfgRefDate').value = STATE.refDate;
-  document.getElementById('cfgRefPrice').value = STATE.refPrice;
-  document.getElementById('cfgRefRate').value = STATE.refRate;
-  document.getElementById('cfgSpread').value = STATE.spread;
-  document.getElementById('cfgCustMode').value = STATE.custMode;
-  document.getElementById('cfgCust1').value = STATE.cust1;
-  document.getElementById('cfgCust2').value = STATE.cust2;
-  document.getElementById('cfgCust3').value = STATE.cust3;
-  
-  document.getElementById('simYearsSlider').value = STATE.simYears;
-  document.getElementById('targetRateSlider').value = STATE.targetRate;
-  document.getElementById('convMonthsSlider').value = STATE.convMonths;
-  document.getElementById('ipcaSlider').value = STATE.ipca;
-  document.getElementById('simQtyInput').value = STATE.simQty;
-}
-
-function updateAll() {
-  calibrateModel();
-  renderPosicao();
-  renderSimulador();
-  renderMainChart();
-  renderMatrix();
-  saveState();
-}
-
-/* EVENT LISTENERS & NAVEGAÇÃO */
-document.querySelectorAll('.tab-button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(btn.dataset.tab).classList.add('active');
-    if (btn.dataset.tab === 'tab-grafico') renderMainChart();
-  });
-});
-
-document.getElementById('simYearsSlider').addEventListener('input', e => {
-  STATE.simYears = Number(e.target.value);
-  renderSimulador();
-  saveState();
-});
-document.getElementById('targetRateSlider').addEventListener('input', e => {
-  STATE.targetRate = Number(e.target.value);
-  renderSimulador();
-  saveState();
-});
-document.getElementById('convMonthsSlider').addEventListener('input', e => {
-  STATE.convMonths = Number(e.target.value);
-  renderSimulador();
-  saveState();
-});
-document.getElementById('ipcaSlider').addEventListener('input', e => {
-  STATE.ipca = Number(e.target.value);
-  updateAll();
-});
-document.getElementById('simQtyInput').addEventListener('input', e => {
-  STATE.simQty = e.target.value;
-  renderSimulador();
-  saveState();
-});
-document.getElementById('btnSellAll').addEventListener('click', () => {
-  STATE.simQty = '';
-  document.getElementById('simQtyInput').value = '';
-  renderSimulador();
-  saveState();
-});
-
-document.getElementById('presetNow').addEventListener('click', () => {
-  STATE.targetRate = Number((MODEL.rNow * 100).toFixed(2));
-  document.getElementById('targetRateSlider').value = STATE.targetRate;
-  renderSimulador();
-  saveState();
-});
-document.getElementById('presetAvg').addEventListener('click', () => {
-  const avg = STATE.lots.reduce((a,b)=>a + b.rate * b.qty, 0) / STATE.lots.reduce((a,b)=>a + b.qty, 0);
-  STATE.targetRate = Number(avg.toFixed(2));
-  document.getElementById('targetRateSlider').value = STATE.targetRate;
-  renderSimulador();
-  saveState();
-});
-document.getElementById('presetLowRate').addEventListener('click', () => {
-  STATE.targetRate = 5.0;
-  document.getElementById('targetRateSlider').value = 5.0;
-  renderSimulador();
-  saveState();
-});
-
-// Configurações
-['cfgRefDate', 'cfgRefPrice', 'cfgRefRate', 'cfgSpread', 'cfgCustMode', 'cfgCust1', 'cfgCust2', 'cfgCust3'].forEach(id => {
-  document.getElementById(id).addEventListener('change', e => {
-    const key = id.replace('cfg', '');
-    const cleanKey = key.charAt(0).toLowerCase() + key.slice(1);
-    STATE[cleanKey] = e.target.value;
-    updateAll();
-  });
-});
-
-document.getElementById('chartMetricSelect').addEventListener('change', e => {
-  STATE.chartMetric = e.target.value;
-  renderMainChart();
-});
-document.getElementById('chartRealSelect').addEventListener('change', e => {
-  STATE.chartReal = e.target.value;
-  renderMainChart();
-});
-
-document.getElementById('btnAddLot').addEventListener('click', () => {
-  const newDate = STATE.refDate;
-  STATE.lots.push({ date: newDate, rate: Number((MODEL.rNow * 100).toFixed(2)), price: MODEL.pNow, qty: 10 });
-  updateAll();
-});
-window.removeLot = idx => {
-  if (STATE.lots.length <= 1) {
-    alert('É necessário manter pelo menos um lote investido.');
-    return;
-  }
-  STATE.lots.splice(idx, 1);
-  updateAll();
-};
-document.getElementById('btnResetData').addEventListener('click', () => {
-  if (confirm('Restaurar todos os dados para o padrão original?')) {
-    STATE = structuredClone(DEFAULT_STATE);
-    syncInputs();
-    updateAll();
-  }
-});
-
-// Inicialização
-syncInputs();
-updateAll();
-</script>
+<script type="module" src="/src/main.js"></script>
 </body>
 </html>
