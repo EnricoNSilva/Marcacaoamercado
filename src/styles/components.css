@@ -334,3 +334,111 @@ table.data-table td input {
   background: var(--semantic-danger-bg);
   color: var(--semantic-danger);
 }
+
+/* ==========================================================================
+   BALÕES EXPLICATIVOS & TOOLTIPS (?) - IHC DESIGN SYSTEM
+   ========================================================================== */
+.infotip-container {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.infotip-trigger {
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  border: 1px solid var(--border-muted);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: inherit;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0;
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+.infotip-trigger:hover,
+.infotip-trigger:focus-visible,
+.infotip-container.open .infotip-trigger {
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  background: var(--bg-card);
+  box-shadow: 0 0 8px var(--brand-glow);
+}
+
+.infotip-popup {
+  display: none; /* ESCONDIDO POR PADRÃO! */
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #182238;
+  color: #f1f5f9;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-transform: none; /* Não herda o maiúsculo do kpi-label */
+  letter-spacing: normal;
+  width: max-content;
+  max-width: 270px;
+  white-space: normal;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7);
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.infotip-popup::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #182238 transparent transparent transparent;
+}
+
+/* Alinhamento inteligente dentro dos cards KPI (para não vazar à direita) */
+.kpi-card .infotip-popup {
+  right: -8px;
+  left: auto;
+  transform: none;
+}
+
+.kpi-card .infotip-popup::after {
+  right: 12px;
+  left: auto;
+  transform: none;
+}
+
+/* Revelação no Hover, Foco por teclado ou Toque/Clique */
+.infotip-container:hover .infotip-popup,
+.infotip-container.open .infotip-popup,
+.infotip-trigger:focus-visible + .infotip-popup {
+  display: block;
+  animation: tooltipFadeIn 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
