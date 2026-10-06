@@ -195,16 +195,16 @@ export function createSimulatorView(store) {
         const pctClass = pctLote >= 0 ? 'pos' : 'neg';
 
         tr.innerHTML = `
-          <td>${formatBRLDate(p.lot.dn)}</td>
-          <td>IPCA + ${fmtPct(p.lot.rate / 100)}</td>
-          <td>${fmtNum(p.q)}</td>
-          <td>${fmtBRL(p.custo)}</td>
-          <td>${fmtBRL(p.bruto)}</td>
-          <td>${fmtBRL(p.cust)}</td>
-          <td>${fmtBRL(p.ir)}</td>
-          <td class="pos" style="font-weight:700">${fmtBRL(p.liqReal)}</td>
-          <td class="${lucroClass} tabular-nums">${lucroSign}${fmtBRL(lucroLote)}</td>
-          <td class="${pctClass} tabular-nums" style="font-weight:600">${pctSign}${fmtPct(pctLote)}</td>
+          <td data-label="Lote">${formatBRLDate(p.lot.dn)}</td>
+          <td data-label="Taxa Compra">IPCA + ${fmtPct(p.lot.rate / 100)}</td>
+          <td data-label="Qtd. Vendida">${fmtNum(p.q)}</td>
+          <td data-label="Custo Lote">${fmtBRL(p.custo)}</td>
+          <td data-label="Valor Bruto">${fmtBRL(p.bruto)}</td>
+          <td data-label="Custódia B3">${fmtBRL(p.cust)}</td>
+          <td data-label="IR Retido">${fmtBRL(p.ir)}</td>
+          <td data-label="Líquido Final" class="pos" style="font-weight:700">${fmtBRL(p.liqReal)}</td>
+          <td data-label="Ganho R$" class="${lucroClass} tabular-nums">${lucroSign}${fmtBRL(lucroLote)}</td>
+          <td data-label="Rentab. %" class="${pctClass} tabular-nums" style="font-weight:600">${pctSign}${fmtPct(pctLote)}</td>
         `;
         simTableBody.appendChild(tr);
       });

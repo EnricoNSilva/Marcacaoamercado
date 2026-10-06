@@ -105,20 +105,20 @@ export function createPositionView(store) {
         const loteClass = pctLote >= 0 ? 'pos' : 'neg';
 
         tr.innerHTML = `
-          <td>${formatBRLDate(p.lot.dn)}</td>
-          <td>IPCA + ${fmtPct(p.lot.rate / 100)}</td>
-          <td>${fmtBRL(p.lot.price)}</td>
-          <td>
+          <td data-label="Data Compra">${formatBRLDate(p.lot.dn)}</td>
+          <td data-label="Taxa Compra">IPCA + ${fmtPct(p.lot.rate / 100)}</td>
+          <td data-label="PU Compra">${fmtBRL(p.lot.price)}</td>
+          <td data-label="Qtd. Títulos">
             <input type="number" step="0.01" min="0.01" value="${p.q}" data-lot-id="${lotId}" class="lot-qty-input" />
           </td>
-          <td>${fmtBRL(p.custo)}</td>
-          <td>${p.days} d</td>
-          <td>${fmtBRL(p.bruto)}</td>
-          <td>${fmtBRL(p.cust)}</td>
-          <td>${fmtBRL(p.bruto - p.liqApp)} <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span></td>
-          <td class="pos tabular-nums" style="font-weight:700">${fmtBRL(p.liqApp)}</td>
-          <td class="${loteClass} tabular-nums" style="font-weight:600">${loteSign}${fmtPct(pctLote)}</td>
-          <td>
+          <td data-label="Valor Investido">${fmtBRL(p.custo)}</td>
+          <td data-label="Dias Decorridos">${p.days} d</td>
+          <td data-label="Valor Bruto">${fmtBRL(p.bruto)}</td>
+          <td data-label="Custódia B3">${fmtBRL(p.cust)}</td>
+          <td data-label="IR Retido">${fmtBRL(p.bruto - p.liqApp)} <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span></td>
+          <td data-label="Líquido (App)" class="pos tabular-nums" style="font-weight:700">${fmtBRL(p.liqApp)}</td>
+          <td data-label="Rentab. %" class="${loteClass} tabular-nums" style="font-weight:600">${loteSign}${fmtPct(pctLote)}</td>
+          <td data-label="Ações">
             <button class="btn btn-danger-outline btn-sm" data-remove-id="${lotId}">Excluir</button>
           </td>
         `;
@@ -135,18 +135,18 @@ export function createPositionView(store) {
       const totalRow = document.createElement('tr');
       totalRow.className = 'total-row';
       totalRow.innerHTML = `
-        <td>Total</td>
-        <td>--</td>
-        <td>--</td>
-        <td>${fmtNum(posRes.q)}</td>
-        <td>${fmtBRL(posRes.custo)}</td>
-        <td>--</td>
-        <td>${fmtBRL(posRes.bruto)}</td>
-        <td>${fmtBRL(posRes.cust)}</td>
-        <td>${fmtBRL(posRes.bruto - posRes.liqApp)}</td>
-        <td class="pos" style="font-size:14px">${fmtBRL(posRes.liqApp)}</td>
-        <td class="${totalClass}" style="font-size:14px;font-weight:700">${totalSign}${fmtPct(totalPct)}</td>
-        <td>--</td>
+        <td data-label="Resumo">Total</td>
+        <td data-label="Taxa Média">--</td>
+        <td data-label="Preço Médio">--</td>
+        <td data-label="Qtd. Total">${fmtNum(posRes.q)}</td>
+        <td data-label="Investido Total">${fmtBRL(posRes.custo)}</td>
+        <td data-label="Dias">--</td>
+        <td data-label="Bruto Total">${fmtBRL(posRes.bruto)}</td>
+        <td data-label="Custódia Total">${fmtBRL(posRes.cust)}</td>
+        <td data-label="IR Retido Total">${fmtBRL(posRes.bruto - posRes.liqApp)}</td>
+        <td data-label="Líquido Total" class="pos" style="font-size:14px">${fmtBRL(posRes.liqApp)}</td>
+        <td data-label="Rentab. Total" class="${totalClass}" style="font-size:14px;font-weight:700">${totalSign}${fmtPct(totalPct)}</td>
+        <td data-label="Ações">--</td>
       `;
       tableBody.appendChild(totalRow);
 

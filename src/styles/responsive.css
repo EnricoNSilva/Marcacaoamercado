@@ -1,29 +1,189 @@
 /**
- * Camada 5: Responsividade & Media Queries
- * Adaptações para diferentes larguras de viewport.
+ * Camada 5: Responsividade Móvel & Telas Grandes (Design System & IHC)
+ * - Telas Pequenas (< 768px): Cartões Empilhados para Tabelas e Alvos de Toque WCAG >= 44px.
+ * - Telas Médias (768px - 1024px): Grids equilibrados para tablets.
+ * - Telas Grandes (>= 1440px / 2000px): Layout amplo fluido para Monitores 4K/Ultrawide.
  */
+
+/* ==========================================================================
+   1. TELAS GRANDES & ULTRAWIDE (>= 1440px)
+   ========================================================================== */
+@media (min-width: 1440px) {
+  .app-container {
+    max-width: 1680px;
+    padding: 0 28px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 16px;
+  }
+
+  .chart-wrapper {
+    height: clamp(400px, 46vh, 620px);
+  }
+
+  .chart-wrapper.compact {
+    height: 190px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .app-container {
+    max-width: 1920px;
+  }
+
+  .kpi-value {
+    font-size: 22px;
+  }
+}
+
+/* ==========================================================================
+   2. TABLETS & RESOLUÇÕES INTERMEDIÁRIAS (601px - 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .split-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
 
 @media (max-width: 900px) {
   .app-header .header-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 10px;
+    gap: 12px;
   }
 
   .header-quick-stats {
     width: 100%;
     justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    scrollbar-width: none;
   }
-
-  .split-layout {
-    grid-template-columns: minmax(0, 1fr);
-  }
-
-  .kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  .header-quick-stats::-webkit-scrollbar {
+    display: none;
   }
 }
 
+/* ==========================================================================
+   3. SMARTPHONES & CELULARES (< 768px): CARTÕES EMPILHADOS & TOUCH TARGETS
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Cartões Empilhados para Tabelas (Substitui rolagem horizontal em tabelas densas) */
+  .table-responsive-container {
+    border: none;
+    background: transparent;
+    overflow-x: visible;
+  }
+
+  table.data-table,
+  table.data-table thead,
+  table.data-table tbody,
+  table.data-table th,
+  table.data-table td,
+  table.data-table tr {
+    display: block;
+  }
+
+  /* Oculta o cabeçalho tradicional da tabela */
+  table.data-table thead tr {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Cada linha vira um Card independente */
+  table.data-table tr {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    margin-bottom: 14px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: border-color var(--transition-fast);
+  }
+
+  table.data-table tr:hover:not(.total-row) td {
+    background: transparent;
+  }
+
+  table.data-table tr.total-row {
+    background: var(--bg-elevated);
+    border: 1.5px solid var(--brand-primary);
+  }
+
+  /* Cada célula vira uma linha com Rótulo à esquerda e Valor à direita */
+  table.data-table td {
+    border: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    white-space: normal;
+    font-size: 13px;
+    text-align: right;
+  }
+
+  table.data-table td:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+    padding-top: 10px;
+  }
+
+  table.data-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    text-align: left;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  table.data-table td input {
+    text-align: right;
+    width: 110px;
+  }
+
+  table.data-table td button {
+    width: 100%;
+    margin-top: 4px;
+  }
+
+  /* Alvos de Toque (WCAG >= 44px) para Sliders e Controles Touch */
+  .slider-control {
+    height: 10px;
+    margin: 12px 0;
+  }
+
+  .slider-control::-webkit-slider-thumb {
+    width: 24px;
+    height: 24px;
+  }
+
+  .btn {
+    min-height: 40px;
+  }
+
+  .btn-sm {
+    min-height: 34px;
+  }
+}
+
+/* ==========================================================================
+   4. CELULARES PEQUENOS (< 600px)
+   ========================================================================== */
 @media (max-width: 600px) {
   .app-container {
     padding: 0 10px;
@@ -32,32 +192,50 @@
   .card {
     padding: 14px;
     border-radius: var(--radius-md);
+    margin-bottom: 14px;
+  }
+
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .kpi-card {
+    padding: 10px 12px;
   }
 
   .kpi-value {
-    font-size: 17px;
+    font-size: 16px;
+  }
+
+  .kpi-sub {
+    font-size: 10.5px;
   }
 
   .app-tabs {
-    margin: 12px 0 16px;
+    margin: 10px 0 14px;
+    gap: 6px;
   }
 
   .tab-button {
-    padding: 8px 12px;
-    font-size: 12.5px;
+    padding: 9px 12px;
+    font-size: 12px;
+  }
+
+  .stat-pill {
+    padding: 5px 10px;
+    font-size: 11.5px;
+  }
+
+  .stat-pill strong {
+    font-size: 13.5px;
   }
 
   .chart-wrapper {
-    height: 300px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .app-container {
-    max-width: 1560px;
+    height: 290px;
   }
 
-  .chart-wrapper {
-    height: 420px;
+  .chart-wrapper.compact {
+    height: 160px;
   }
 }
