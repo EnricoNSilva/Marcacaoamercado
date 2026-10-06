@@ -2,7 +2,7 @@
  * Interface - Formatadores de Moeda, Percentual e Números pt-BR
  */
 
-import { formatBRLDate } from '../core/dates.js';
+import { formatBRLDate } from "../core/dates.js";
 
 export { formatBRLDate };
 
@@ -12,9 +12,9 @@ export { formatBRLDate };
  * @returns {string}
  */
 export function fmtBRL(v) {
-  return (Number(v) || 0).toLocaleString('pt-BR', {
-    style: 'currency',
-    currency: 'BRL'
+  return (Number(v) || 0).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
   });
 }
 
@@ -27,10 +27,12 @@ export function fmtBRL(v) {
  */
 export function fmtPct(v, decimals = 2) {
   const num = (Number(v) || 0) * 100;
-  return num.toLocaleString('pt-BR', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }) + '%';
+  return (
+    num.toLocaleString("pt-BR", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }) + "%"
+  );
 }
 
 /**
@@ -41,10 +43,12 @@ export function fmtPct(v, decimals = 2) {
  */
 export function fmtPctDirect(v, decimals = 2) {
   const num = Number(v) || 0;
-  return num.toLocaleString('pt-BR', {
-    minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
-  }) + '%';
+  return (
+    num.toLocaleString("pt-BR", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }) + "%"
+  );
 }
 
 /**
@@ -54,8 +58,8 @@ export function fmtPctDirect(v, decimals = 2) {
  * @returns {string}
  */
 export function fmtNum(v, decimals = 2) {
-  return (Number(v) || 0).toLocaleString('pt-BR', {
+  return (Number(v) || 0).toLocaleString("pt-BR", {
     minimumFractionDigits: decimals,
-    maximumFractionDigits: decimals
+    maximumFractionDigits: decimals,
   });
 }

@@ -117,6 +117,8 @@ export function renderProjectionChart(canvasId, state, computed) {
           grid: { color: CHART_COLORS.borderGrid }
         },
         y: {
+          beginAtZero: true,
+          min: 0,
           ticks: {
             color: CHART_COLORS.textMuted,
             callback: v => 'R$ ' + (v / 1000).toLocaleString('pt-BR') + ' mil'
@@ -127,3 +129,4 @@ export function renderProjectionChart(canvasId, state, computed) {
     }
   });
 }
+

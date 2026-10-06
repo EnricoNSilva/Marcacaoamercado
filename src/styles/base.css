@@ -3,13 +3,16 @@
  * Reset universal, tipografia e acessibilidade de foco.
  */
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html,
+body {
   background-color: var(--bg-base);
   color: var(--text-primary);
   font-family: var(--font-family);
@@ -29,9 +32,15 @@ html, body {
 }
 
 /* Indicadores Semânticos */
-.pos { color: var(--semantic-success); }
-.neg { color: var(--semantic-danger); }
-.warn { color: var(--semantic-warning); }
+.pos {
+  color: var(--semantic-success);
+}
+.neg {
+  color: var(--semantic-danger);
+}
+.warn {
+  color: var(--semantic-warning);
+}
 
 /* Foco acessível */
 :focus-visible {
@@ -41,7 +50,9 @@ html, body {
 
 /* Redução de Movimento */
 @media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
+  *,
+  *::before,
+  *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

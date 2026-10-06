@@ -67,3 +67,4 @@ export function renderRateTrajectoryChart(canvasId, state, computed) {
     }
   });
 }
+

@@ -1,10 +1,11 @@
 /**
  * View: Matriz de Estresse & Sensibilidade (Aba 4)
- * Heatmap de cenários e análise de duration modificada.
+ * Heatmap de cenários, sensibilidade imediata com métricas de % e tooltips.
  */
 
-import { addYearsDN, getVNAFactor, calcPU, simulateSellPEPS, MAX_SIM_DATE, trunc2 } from '../../core/index.js';
+import { addYearsDN, getVNAFactor, calcPU, simulateSellPEPS, MAX_SIM_DATE } from '../../core/index.js';
 import { fmtBRL, fmtPct, fmtNum } from '../format.js';
+import { renderInfoTip } from '../components/infoTip.js';
 
 export function createMatrixView(store) {
   const matrixTable = document.getElementById('matrixTable');
@@ -15,6 +16,8 @@ export function createMatrixView(store) {
     const { refDN, rNow, pNow, Fref, posRes, duration, custodyConfig } = computed;
     const horizons = [0, 1, 2, 3, 5, 10, 15, 20, 30];
     const rates = [0.045, 0.05, 0.055, 0.06, 0.065, 0.07, 0.075, 0.08, 0.085];
+    const vnaToday = getVNAFactor(refDN, refDN, Fref, state.ipca);
+    const baseReturnPct = posRes.custo > 0 ? ((posRes.liqApp - posRes.custo) / posRes.custo) : 0;
 
     // 1. Matriz de Cenários
     if (matrixTable) {
@@ -24,22 +27,20 @@ export function createMatrixView(store) {
       });
       html += '</tr></thead><tbody>';
 
-      // Linha de Carrego Puro (Correção B5: Carrego Líquido para comparação justa e precisa)
-      html += '<tr><td><strong>Carrego Puro (Líquido)</strong></td>';
+      // Linha de Carrego Puro Líquido (B5)
+      html += `<tr><td><strong>Carrego Puro (Líquido)</strong> ${renderInfoTip('carregoPuro')}</td>`;
       horizons.forEach(h => {
         const d = Math.min(addYearsDN(refDN, h), MAX_SIM_DATE);
         const vna = getVNAFactor(d, refDN, Fref, state.ipca);
 
-        // Simula venda onde cada lote é liquidado ao seu próprio PU de carrego contratado
         const carryRes = simulateSellPEPS({
           lots: state.lots,
           t: d,
-          r: rNow, // taxa base
+          r: rNow,
           vnaFactor: vna,
           custodyConfig
         });
 
-        // Calcula saldo líquido projetado do carrego
         const lucroLiqCarrego = carryRes.liqReal - carryRes.custo;
         const pctCarrego = carryRes.custo > 0 ? (lucroLiqCarrego / carryRes.custo) : 0;
         const bg = lucroLiqCarrego >= 0 ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
@@ -89,44 +90,94 @@ export function createMatrixView(store) {
       matrixTable.innerHTML = html + '</tbody>';
     }
 
-    // 2. Tabela de Sensibilidade Imediata
+    // 2. Tabela de Sensibilidade Imediata com Métricas de Rentabilidade (%)
     if (sensTable) {
       const shocks = [-1.0, -0.5, -0.25, -0.1, 0.1, 0.25, 0.5, 1.0];
-      const vnaToday = getVNAFactor(refDN, refDN, Fref, state.ipca);
 
-      let sHtml = '<thead><tr><th>Choque na Taxa</th>' +
-        shocks.map(s => `<th style="text-align:center">${s > 0 ? '+' : ''}${s.toFixed(2)} p.p.</th>`).join('') +
-        '</tr></thead><tbody>';
+      // Pré-calcula os resultados de cada choque
+      const shockResults = shocks.map(s => {
+        const newRate = rNow + s / 100;
+        const newPU = calcPU(refDN, newRate, vnaToday);
+        const puVarPct = (newPU - pNow) / pNow;
 
-      sHtml += '<tr><td>Taxa Resultante</td>' +
-        shocks.map(s => `<td style="text-align:center">IPCA + ${fmtPct(rNow + s / 100)}</td>`).join('') +
-        '</tr>';
-
-      sHtml += '<tr><td>Novo PU</td>' +
-        shocks.map(s => `<td style="text-align:center">${fmtBRL(calcPU(refDN, rNow + s / 100, vnaToday))}</td>`).join('') +
-        '</tr>';
-
-      sHtml += '<tr><td>Variação Saldo Bruto</td>' + shocks.map(s => {
         const shockRes = simulateSellPEPS({
           lots: state.lots,
           t: refDN,
-          r: rNow + s / 100,
+          r: newRate,
           vnaFactor: vnaToday,
-          custodyConfig
+          custodyConfig,
+          overridePU: newPU
         });
-        const dif = shockRes.bruto - posRes.bruto;
-        const sign = dif >= 0 ? '+' : '';
-        const cls = dif >= 0 ? 'pos' : 'neg';
-        return `<td style="text-align:center" class="${cls}">${sign}${fmtBRL(dif)}</td>`;
-      }).join('') + '</tr></tbody>';
 
+        const brutoDiff = shockRes.bruto - posRes.bruto;
+        const shockReturnPct = shockRes.custo > 0 ? ((shockRes.liqApp - shockRes.custo) / shockRes.custo) : 0;
+        const returnDiffPP = (shockReturnPct - baseReturnPct) * 100;
+
+        return {
+          shock: s,
+          newRate,
+          newPU,
+          puVarPct,
+          brutoDiff,
+          shockReturnPct,
+          returnDiffPP
+        };
+      });
+
+      let sHtml = '<thead><tr><th>Choque na Taxa ' + renderInfoTip('choqueTaxa') + '</th>' +
+        shockResults.map(r => `<th style="text-align:center">${r.shock > 0 ? '+' : ''}${r.shock.toFixed(2)} p.p.</th>`).join('') +
+        '</tr></thead><tbody>';
+
+      // Linha 1: Taxa Resultante
+      sHtml += '<tr><td><strong>Taxa Resultante</strong></td>' +
+        shockResults.map(r => `<td style="text-align:center">IPCA + ${fmtPct(r.newRate)}</td>`).join('') +
+        '</tr>';
+
+      // Linha 2: Novo PU
+      sHtml += '<tr><td><strong>Novo PU de Resgate</strong></td>' +
+        shockResults.map(r => `<td style="text-align:center">${fmtBRL(r.newPU)}</td>`).join('') +
+        '</tr>';
+
+      // Linha 3: Variação % do Preço (PU)
+      sHtml += '<tr><td><strong>Variação % no Preço (PU)</strong> ' + renderInfoTip('duration') + '</td>' +
+        shockResults.map(r => {
+          const sign = r.puVarPct >= 0 ? '+' : '';
+          const cls = r.puVarPct >= 0 ? 'pos' : 'neg';
+          return `<td style="text-align:center;font-weight:600" class="${cls}">${sign}${fmtPct(r.puVarPct)}</td>`;
+        }).join('') + '</tr>';
+
+      // Linha 4: Variação em Saldo Bruto (R$)
+      sHtml += '<tr><td><strong>Variação Saldo Bruto (R$)</strong></td>' +
+        shockResults.map(r => {
+          const sign = r.brutoDiff >= 0 ? '+' : '';
+          const cls = r.brutoDiff >= 0 ? 'pos' : 'neg';
+          return `<td style="text-align:center" class="${cls}">${sign}${fmtBRL(r.brutoDiff)}</td>`;
+        }).join('') + '</tr>';
+
+      // Linha 5: Rentabilidade Líquida Resultante (%)
+      sHtml += '<tr><td><strong>Rentabilidade Líquida Total (%)</strong> ' + renderInfoTip('rentabilidadeLiq') + '</td>' +
+        shockResults.map(r => {
+          const sign = r.shockReturnPct >= 0 ? '+' : '';
+          const cls = r.shockReturnPct >= 0 ? 'pos' : 'neg';
+          return `<td style="text-align:center;font-weight:700" class="${cls}">${sign}${fmtPct(r.shockReturnPct)}</td>`;
+        }).join('') + '</tr>';
+
+      // Linha 6: Impacto na Rentabilidade (p.p.)
+      sHtml += '<tr><td><strong>Impacto na Rentabilidade (p.p.)</strong></td>' +
+        shockResults.map(r => {
+          const sign = r.returnDiffPP >= 0 ? '+' : '';
+          const cls = r.returnDiffPP >= 0 ? 'pos' : 'neg';
+          return `<td style="text-align:center" class="${cls}">${sign}${fmtNum(r.returnDiffPP, 2)} p.p.</td>`;
+        }).join('') + '</tr>';
+
+      sHtml += '</tbody>';
       sensTable.innerHTML = sHtml;
     }
 
-    // 3. Explicação de Duration
+    // 3. Explicação de Duration Modificada
     if (durationExplanation) {
       durationExplanation.innerHTML = `
-        <strong>Duration Modificada Estimada: ≈ ${fmtNum(duration, 1)} anos.</strong> Cada variação de 0,10 p.p. na taxa do título movimenta aproximadamente <strong>${fmtNum(duration * 0.1, 1)}%</strong> do seu valor de mercado.
+        <strong>Duration Modificada Estimada: ≈ ${fmtNum(duration, 1)} anos.</strong> Cada variação de 0,10 p.p. na taxa do título movimenta aproximadamente <strong>${fmtNum(duration * 0.1, 1)}%</strong> do seu valor de mercado. ${renderInfoTip('duration')}
       `;
     }
   }

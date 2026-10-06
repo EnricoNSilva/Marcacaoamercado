@@ -3,26 +3,26 @@
  * Gerencia a alternância de abas ativas e sincroniza com o hash da URL (#aba).
  */
 
-import { $$, $ } from '../dom.js';
+import { $$, $ } from "../dom.js";
 
 export function initTabs({ onTabChange } = {}) {
-  const buttons = $$('.tab-button');
-  const panes = $$('.tab-pane');
+  const buttons = $$(".tab-button");
+  const panes = $$(".tab-pane");
 
   function activateTab(tabId, updateHash = true) {
-    buttons.forEach(btn => {
+    buttons.forEach((btn) => {
       const isActive = btn.dataset.tab === tabId;
-      btn.classList.toggle('active', isActive);
-      btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-selected", isActive ? "true" : "false");
     });
 
-    panes.forEach(pane => {
+    panes.forEach((pane) => {
       const isActive = pane.id === tabId;
-      pane.classList.toggle('active', isActive);
+      pane.classList.toggle("active", isActive);
     });
 
     if (updateHash && window.location.hash !== `#${tabId}`) {
-      window.history.replaceState(null, '', `#${tabId}`);
+      window.history.replaceState(null, "", `#${tabId}`);
     }
 
     if (onTabChange) {
@@ -30,19 +30,19 @@ export function initTabs({ onTabChange } = {}) {
     }
   }
 
-  buttons.forEach(btn => {
-    btn.addEventListener('click', () => {
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
       activateTab(btn.dataset.tab);
     });
   });
 
   // Lê hash inicial da URL
-  const initialHash = window.location.hash.replace('#', '');
+  const initialHash = window.location.hash.replace("#", "");
   if (initialHash && $(`#${initialHash}`)) {
     activateTab(initialHash, false);
   }
 
   return {
-    activateTab
+    activateTab,
   };
 }

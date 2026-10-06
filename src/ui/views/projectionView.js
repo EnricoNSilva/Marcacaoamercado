@@ -3,20 +3,20 @@
  * Gráficos comparativos de marcação a mercado e carrego puro.
  */
 
-import { renderProjectionChart } from '../charts/projectionChart.js';
+import { renderProjectionChart } from "../charts/projectionChart.js";
 
 export function createProjectionView(store) {
-  const chartMetricSelect = document.getElementById('chartMetricSelect');
-  const chartRealSelect = document.getElementById('chartRealSelect');
+  const chartMetricSelect = document.getElementById("chartMetricSelect");
+  const chartRealSelect = document.getElementById("chartRealSelect");
 
   if (chartMetricSelect) {
-    chartMetricSelect.addEventListener('change', e => {
+    chartMetricSelect.addEventListener("change", (e) => {
       store.setState({ chartMetric: e.target.value });
     });
   }
 
   if (chartRealSelect) {
-    chartRealSelect.addEventListener('change', e => {
+    chartRealSelect.addEventListener("change", (e) => {
       store.setState({ chartReal: e.target.value });
     });
   }
@@ -29,7 +29,7 @@ export function createProjectionView(store) {
       chartRealSelect.value = state.chartReal;
     }
 
-    renderProjectionChart('mainChart', state, computed);
+    renderProjectionChart("mainChart", state, computed);
   }
 
   return { render };

@@ -1,6 +1,7 @@
 /**
  * View: Posição Atual (Aba 1)
- * Detalhamento centavo por centavo, conferência com extrato e gestão de lotes por ID.
+ * Detalhamento centavo por centavo, conferência com extrato, gestão de lotes por ID,
+ * balões explicativos (?) e métricas completas de rentabilidade (%).
  */
 
 import { fmtBRL, fmtPct, fmtNum, formatBRLDate } from '../format.js';
@@ -34,53 +35,74 @@ export function createPositionView(store) {
   }
 
   function render(state, computed) {
-    const { posRes, posLucroApp, pNow } = computed;
+    const {
+      posRes,
+      posLucroApp,
+      posReturnPct,
+      posRealReturnPct,
+      posTIR,
+      pNow
+    } = computed;
 
-    // 1. Renderiza KPIs
+    // 1. Renderiza KPIs com Tooltips (?) e Rentabilidade %
     if (kpisContainer) {
       const avgPrice = posRes.q > 0 ? (posRes.custo / posRes.q) : 0;
       const lucroSign = posLucroApp >= 0 ? '+' : '';
       const lucroClass = posLucroApp >= 0 ? 'pos' : 'neg';
-      const pctLucro = posRes.custo > 0 ? (posLucroApp / posRes.custo) : 0;
 
       kpisContainer.innerHTML =
         renderKpiCard({
           label: 'Total Investido',
           value: fmtBRL(posRes.custo),
-          sub: `${fmtNum(posRes.q)} títulos · PM ${fmtBRL(avgPrice)}`
+          sub: `${fmtNum(posRes.q)} títulos · PM ${fmtBRL(avgPrice)}`,
+          tooltipKey: 'totalInvestido'
         }) +
         renderKpiCard({
           label: 'Saldo Bruto Atual',
           value: fmtBRL(posRes.bruto),
-          sub: `PU de Resgate ${fmtBRL(pNow)}`
+          sub: `PU de Resgate ${fmtBRL(pNow)}`,
+          tooltipKey: 'saldoBruto'
         }) +
         renderKpiCard({
           label: 'Saldo Líquido (App)',
           value: fmtBRL(posRes.liqApp),
-          sub: `Lucro ${lucroSign}${fmtBRL(posLucroApp)} (${fmtPct(pctLucro)})`,
-          valClass: lucroClass
+          sub: `Lucro ${lucroSign}${fmtBRL(posLucroApp)}`,
+          valClass: lucroClass,
+          tooltipKey: 'saldoLiqApp'
+        }) +
+        renderKpiCard({
+          label: 'Rentabilidade Líquida %',
+          value: `${lucroSign}${fmtPct(posReturnPct)}`,
+          sub: `TIR ≈ ${fmtPct(posTIR)} a.a. · Real: ${fmtPct(posRealReturnPct)}`,
+          valClass: lucroClass,
+          tooltipKey: 'rentabilidadeLiq'
         }) +
         renderKpiCard({
           label: 'Líquido Real (pós Custódia)',
           value: fmtBRL(posRes.liqReal),
           sub: `Custódia B3 retida: ${fmtBRL(posRes.cust)}`,
-          valClass: 'pos'
+          valClass: 'pos',
+          tooltipKey: 'saldoLiqReal'
         }) +
         renderKpiCard({
           label: 'IR Total Retido',
           value: fmtBRL(posRes.bruto - posRes.liqApp),
-          sub: 'Alíquotas de 20% a 22,5%'
+          sub: 'Alíquotas de 20% a 22,5%',
+          tooltipKey: 'irRetido'
         });
     }
 
-    // 2. Renderiza Tabela de Lotes
+    // 2. Renderiza Tabela de Lotes com Rentab. % por lote
     if (tableBody) {
       tableBody.innerHTML = '';
 
-      // Exibe os lotes mais recentes em cima
       posRes.parts.slice().reverse().forEach(p => {
         const tr = document.createElement('tr');
         const lotId = p.lot.id;
+        const lucroLote = p.liqApp - p.custo;
+        const pctLote = p.custo > 0 ? (lucroLote / p.custo) : 0;
+        const loteSign = pctLote >= 0 ? '+' : '';
+        const loteClass = pctLote >= 0 ? 'pos' : 'neg';
 
         tr.innerHTML = `
           <td>${formatBRLDate(p.lot.dn)}</td>
@@ -95,6 +117,7 @@ export function createPositionView(store) {
           <td>${fmtBRL(p.cust)}</td>
           <td>${fmtBRL(p.bruto - p.liqApp)} <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span></td>
           <td class="pos tabular-nums" style="font-weight:700">${fmtBRL(p.liqApp)}</td>
+          <td class="${loteClass} tabular-nums" style="font-weight:600">${loteSign}${fmtPct(pctLote)}</td>
           <td>
             <button class="btn btn-danger-outline btn-sm" data-remove-id="${lotId}">Excluir</button>
           </td>
@@ -103,7 +126,12 @@ export function createPositionView(store) {
         tableBody.appendChild(tr);
       });
 
-      // Linha de Totais Consolidados
+      // Linha de Totais Consolidados com Rentab. % Total
+      const totalLucro = posRes.liqApp - posRes.custo;
+      const totalPct = posRes.custo > 0 ? (totalLucro / posRes.custo) : 0;
+      const totalSign = totalPct >= 0 ? '+' : '';
+      const totalClass = totalPct >= 0 ? 'pos' : 'neg';
+
       const totalRow = document.createElement('tr');
       totalRow.className = 'total-row';
       totalRow.innerHTML = `
@@ -117,11 +145,12 @@ export function createPositionView(store) {
         <td>${fmtBRL(posRes.cust)}</td>
         <td>${fmtBRL(posRes.bruto - posRes.liqApp)}</td>
         <td class="pos" style="font-size:14px">${fmtBRL(posRes.liqApp)}</td>
+        <td class="${totalClass}" style="font-size:14px;font-weight:700">${totalSign}${fmtPct(totalPct)}</td>
         <td>--</td>
       `;
       tableBody.appendChild(totalRow);
 
-      // Event Listeners dos Lotes (B3 e B4)
+      // Event Listeners dos Lotes
       tableBody.querySelectorAll('[data-remove-id]').forEach(btn => {
         btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-remove-id');
