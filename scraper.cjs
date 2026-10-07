@@ -41,10 +41,17 @@ https.get(url, (res) => {
     const currentBonds = rows.filter(r => r.dataBase === latestDate);
 
     const results = currentBonds.map(b => {
-      const year = b.vencimento.split('/')[2];
+      let year = parseInt(b.vencimento.split('/')[2], 10);
+      
+      // O nome comercial do Renda+ e Educa+ usa o ano de conversão
+      if (b.tipo === 'Tesouro Renda+ Aposentadoria Extra') {
+        year = year - 19;
+      } else if (b.tipo === 'Tesouro Educa+') {
+        year = year - 4;
+      }
       
       let symbolBase = b.tipo.toLowerCase()
-        .replace(/\+/g, 'mais')
+        .replace(/\+/g, '-mais')
         .replace(/ aposentadoria extra/g, '')
         .replace(/ com juros semestrais/g, '-juros-semestrais')
         .replace(/ /g, '-');
@@ -58,8 +65,8 @@ https.get(url, (res) => {
 
       return {
         symbol: symbol,
-        name: `${b.tipo} ${year}`,
-        bondType: b.tipo,
+        name: `${b.tipo.replace(' Aposentadoria Extra', '')} ${year}`,
+        bondType: b.tipo.replace(' Aposentadoria Extra', ''),
         indexer: b.tipo.includes('Selic') ? 'selic' : b.tipo.includes('Prefixado') ? 'prefixado' : 'ipca',
         sellRate: b.taxaCompra,
         buyRate: b.taxaVenda,
