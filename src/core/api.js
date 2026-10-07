@@ -160,37 +160,38 @@ export async function fetchTreasuryData(token = '') {
 
   let fetchMode = 'fallback';
 
-  // 1. Se houver token, tenta endpoint completo da brapi
-  if (token && token.trim()) {
-    try {
-      const cleanToken = token.trim();
-      const res = await fetch(`https://brapi.dev/api/v2/treasury/list?token=${cleanToken}`);
-      if (res.ok) {
-        const data = await res.json();
-        const list = Array.isArray(data?.results) ? data.results : (Array.isArray(data) ? data : []);
+  // 1. Busca da nossa API Customizada (GitHub Pages)
+  try {
+    // Usamos um timestamp na URL para evitar cache excessivo do navegador
+    const ts = new Date().getTime();
+    const res = await fetch(`https://enriconsilva.github.io/Marcacaoamercado/bonds.json?t=${ts}`);
+    if (res.ok) {
+      const data = await res.json();
+      const list = Array.isArray(data?.results) ? data.results : [];
+      if (list.length > 0) {
         list.forEach(item => {
-          const sym = item.symbol || item.name || '';
+          const sym = item.symbol;
           if (!sym) return;
           mergedMap.set(sym, {
             symbol: sym,
-            name: item.name || item.bondType || sym,
-            bondType: item.bondType || 'Tesouro Direto',
-            indexer: item.indexer || 'ipca',
-            sellRate: normalizeApiNumber(item.sellRate ?? item.annualProfitability ?? item.rate, 0),
-            buyRate: normalizeApiNumber(item.buyRate ?? item.rate, 0),
-            sellPrice: normalizeApiNumber(item.sellPrice ?? item.unitPrice ?? item.basePrice, 0),
-            buyPrice: normalizeApiNumber(item.buyPrice ?? item.unitPrice, 0),
-            baseDate: item.baseDate || item.date || new Date().toISOString().slice(0, 10)
+            name: item.name,
+            bondType: item.bondType,
+            indexer: item.indexer,
+            sellRate: normalizeApiNumber(item.sellRate, 0),
+            buyRate: normalizeApiNumber(item.buyRate, 0),
+            sellPrice: normalizeApiNumber(item.sellPrice, 0),
+            buyPrice: normalizeApiNumber(item.buyPrice, 0),
+            baseDate: item.baseDate
           });
         });
-        fetchMode = 'token';
+        fetchMode = 'custom';
       }
-    } catch (err) {
-      console.warn('[API] Erro ao buscar títulos com token na brapi:', err);
     }
+  } catch (err) {
+    console.warn('[API] Erro ao buscar títulos na nossa API customizada:', err);
   }
 
-  // 2. Se não buscou com token (ou falhou), tenta sandbox público para atualizar títulos públicos disponíveis
+  // 2. Se a API customizada falhar (ex: github pages fora do ar), tenta sandbox da brapi como último recurso
   if (fetchMode === 'fallback') {
     try {
       const sandboxRes = await fetch('https://brapi.dev/api/v2/treasury/indicators?symbols=tesouro-selic-01032031');

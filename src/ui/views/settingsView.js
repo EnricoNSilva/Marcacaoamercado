@@ -97,7 +97,9 @@ export function createSettingsView(store) {
           let color = 'var(--pos-color)';
           let icon = '✅';
           
-          if (res.fetchMode === 'token') {
+          if (res.fetchMode === 'custom') {
+            sourceText = 'API Tesouro Transparente (Hoje)';
+          } else if (res.fetchMode === 'token') {
             sourceText = 'brapi.dev ao vivo (Token Válido)';
           } else if (res.fetchMode === 'sandbox') {
             sourceText = 'brapi.dev Sandbox (Limitado)';
