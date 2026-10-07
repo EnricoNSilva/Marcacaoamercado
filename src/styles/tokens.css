@@ -1,10 +1,12 @@
 /**
  * Camada 1: Design Tokens
  * Paleta de cores, tipografia, bordas, sombras e variáveis semânticas.
+ * Suporte nativo a Tema Escuro (Dark Mode) e Tema Claro (Light Mode).
  */
 
-:root {
-  /* Cores de Fundo */
+:root,
+:root[data-theme="dark"] {
+  /* Cores de Fundo - Modo Escuro */
   --bg-base: #090d16;
   --bg-surface: #111726;
   --bg-elevated: #182238;
@@ -36,6 +38,48 @@
   --semantic-info: #06b6d4;
   --semantic-info-bg: rgba(6, 182, 212, 0.12);
 
+  /* Gráficos */
+  --chart-grid: #1e2c47;
+}
+
+:root[data-theme="light"] {
+  /* Cores de Fundo - Modo Claro */
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --bg-card: #ffffff;
+  --bg-input: #f8fafc;
+
+  /* Bordas */
+  --border-subtle: #e2e8f0;
+  --border-muted: #cbd5e1;
+  --border-active: #2563eb;
+
+  /* Tipografia */
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #64748b;
+
+  /* Cores da Marca */
+  --brand-primary: #2563eb;
+  --brand-hover: #1d4ed8;
+  --brand-glow: rgba(37, 99, 235, 0.15);
+
+  /* Cores Semânticas */
+  --semantic-success: #16a34a;
+  --semantic-success-bg: rgba(22, 163, 74, 0.10);
+  --semantic-danger: #dc2626;
+  --semantic-danger-bg: rgba(220, 38, 38, 0.10);
+  --semantic-warning: #d97706;
+  --semantic-warning-bg: rgba(217, 119, 6, 0.10);
+  --semantic-info: #0284c7;
+  --semantic-info-bg: rgba(2, 132, 199, 0.10);
+
+  /* Gráficos */
+  --chart-grid: #e2e8f0;
+}
+
+:root {
   /* Geometria e Espaçamentos */
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -49,4 +93,3 @@
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
 }
-

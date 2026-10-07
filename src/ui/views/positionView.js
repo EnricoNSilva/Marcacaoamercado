@@ -6,12 +6,24 @@
 
 import { fmtBRL, fmtPct, fmtNum, formatBRLDate } from '../format.js';
 import { renderKpiCard } from '../components/kpiCard.js';
+import { renderAllocationChart } from '../charts/allocationChart.js';
+import { getIRSchedule } from '../../core/index.js';
 
 export function createPositionView(store) {
   const kpisContainer = document.getElementById('posKpis');
   const tableBody = document.querySelector('#lotsTable tbody');
   const btnAddLot = document.getElementById('btnAddLot');
   const btnResetData = document.getElementById('btnResetData');
+  const modeSelect = document.getElementById('allocationModeSelect');
+
+  let currentAllocationMode = 'indexer';
+
+  if (modeSelect) {
+    modeSelect.addEventListener('change', (e) => {
+      currentAllocationMode = e.target.value;
+      renderAllocationChart('allocationChart', store.getState(), store.getComputed(), currentAllocationMode);
+    });
+  }
 
   if (btnAddLot) {
     btnAddLot.addEventListener('click', () => {
@@ -92,7 +104,10 @@ export function createPositionView(store) {
         });
     }
 
-    // 2. Renderiza Tabela de Lotes com Rentab. % por lote
+    // 2. Renderiza Gráfico de Alocação (Donut Chart)
+    renderAllocationChart('allocationChart', state, computed, currentAllocationMode);
+
+    // 3. Renderiza Tabela de Lotes com Rentab. % por lote
     if (tableBody) {
       tableBody.innerHTML = '';
 
@@ -103,6 +118,11 @@ export function createPositionView(store) {
         const pctLote = p.custo > 0 ? (lucroLote / p.custo) : 0;
         const loteSign = pctLote >= 0 ? '+' : '';
         const loteClass = pctLote >= 0 ? 'pos' : 'neg';
+
+        const sched = getIRSchedule(p.days);
+        const irNextBadge = sched.nextRate
+          ? `<span class="badge" style="background:var(--semantic-info-bg);color:var(--semantic-info);font-size:10px;" title="${sched.daysRemaining} dias para a alíquota cair para ${fmtPct(sched.nextRate, 1)}">⏳ ${sched.statusText}</span>`
+          : `<span class="badge" style="background:var(--semantic-success-bg);color:var(--semantic-success);font-size:10px;">⭐ Mín. 15%</span>`;
 
         tr.innerHTML = `
           <td data-label="Data Compra">${formatBRLDate(p.lot.dn)}</td>
@@ -115,7 +135,13 @@ export function createPositionView(store) {
           <td data-label="Dias Decorridos">${p.days} d</td>
           <td data-label="Valor Bruto">${fmtBRL(p.bruto)}</td>
           <td data-label="Custódia B3">${fmtBRL(p.cust)}</td>
-          <td data-label="IR Retido">${fmtBRL(p.bruto - p.liqApp)} <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span></td>
+          <td data-label="IR Retido">
+            <div>${fmtBRL(p.bruto - p.liqApp)}</div>
+            <div style="margin-top:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
+              <span class="badge badge-neutral">${fmtPct(p.irAliq, 1)}</span>
+              ${irNextBadge}
+            </div>
+          </td>
           <td data-label="Líquido (App)" class="pos tabular-nums" style="font-weight:700">${fmtBRL(p.liqApp)}</td>
           <td data-label="Rentab. %" class="${loteClass} tabular-nums" style="font-weight:600">${loteSign}${fmtPct(pctLote)}</td>
           <td data-label="Ações">

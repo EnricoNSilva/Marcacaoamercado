@@ -25,6 +25,52 @@ export function getIRRate(days) {
 }
 
 /**
+ * Retorna informações sobre a alíquota atual de IR e os dias restantes para a próxima faixa regressiva.
+ * @param {number} days - Dias corridos decorridos desde a compra
+ * @returns {{ rate: number, nextRate: number|null, daysRemaining: number, label: string, statusText: string }}
+ */
+export function getIRSchedule(days) {
+  const d = Math.max(0, Math.floor(days));
+  if (d <= 180) {
+    const daysLeft = 181 - d;
+    return {
+      rate: 0.225,
+      nextRate: 0.20,
+      daysRemaining: daysLeft,
+      label: '22,5%',
+      statusText: `${daysLeft}d p/ 20%`
+    };
+  }
+  if (d <= 360) {
+    const daysLeft = 361 - d;
+    return {
+      rate: 0.20,
+      nextRate: 0.175,
+      daysRemaining: daysLeft,
+      label: '20,0%',
+      statusText: `${daysLeft}d p/ 17,5%`
+    };
+  }
+  if (d <= 720) {
+    const daysLeft = 721 - d;
+    return {
+      rate: 0.175,
+      nextRate: 0.15,
+      daysRemaining: daysLeft,
+      label: '17,5%',
+      statusText: `${daysLeft}d p/ 15%`
+    };
+  }
+  return {
+    rate: 0.15,
+    nextRate: null,
+    daysRemaining: 0,
+    label: '15,0%',
+    statusText: 'Mínima (15%)'
+  };
+}
+
+/**
  * Calcula o IOF retido sobre o rendimento positivo para resgates com menos de 30 dias.
  * @param {number} ganho - Lucro bruto (em R$)
  * @param {number} days - Dias corridos decorridos

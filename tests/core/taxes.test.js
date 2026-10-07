@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { getIRRate, calcIOF, calcCustodyFee, IOF_TABLE } from '../../src/core/taxes.js';
+import { getIRRate, getIRSchedule, calcIOF, calcCustodyFee, IOF_TABLE } from '../../src/core/taxes.js';
 
 describe('Motor Financeiro: Tributação e Custódia B3', () => {
   it('aplica as alíquotas corretas da tabela regressiva de IR', () => {
@@ -11,6 +11,29 @@ describe('Motor Financeiro: Tributação e Custódia B3', () => {
     expect(getIRRate(720)).toBe(0.175);
     expect(getIRRate(721)).toBe(0.15);
     expect(getIRRate(3650)).toBe(0.15);
+  });
+
+  it('retorna cronograma de IR regressivo e contagem regressiva para próxima faixa', () => {
+    const sched100 = getIRSchedule(100);
+    expect(sched100.rate).toBe(0.225);
+    expect(sched100.nextRate).toBe(0.20);
+    expect(sched100.daysRemaining).toBe(81);
+    expect(sched100.statusText).toBe('81d p/ 20%');
+
+    const sched250 = getIRSchedule(250);
+    expect(sched250.rate).toBe(0.20);
+    expect(sched250.nextRate).toBe(0.175);
+    expect(sched250.daysRemaining).toBe(111);
+
+    const sched500 = getIRSchedule(500);
+    expect(sched500.rate).toBe(0.175);
+    expect(sched500.nextRate).toBe(0.15);
+    expect(sched500.daysRemaining).toBe(221);
+
+    const sched800 = getIRSchedule(800);
+    expect(sched800.rate).toBe(0.15);
+    expect(sched800.nextRate).toBeNull();
+    expect(sched800.daysRemaining).toBe(0);
   });
 
   it('aplica a tabela regressiva de IOF para prazos menores que 30 dias', () => {

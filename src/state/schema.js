@@ -73,6 +73,8 @@ export function sanitizeLot(rawLot) {
 export function sanitizeState(rawState = {}) {
   const state = { ...DEFAULT_STATE, ...rawState };
 
+  state.selectedBond = String(state.selectedBond || DEFAULT_STATE.selectedBond || 'tesouro-renda-mais-2065').trim();
+  state.brapiToken = String(state.brapiToken || '').trim();
   state.refDate = String(state.refDate || DEFAULT_STATE.refDate).trim();
   state.refPrice = Math.max(0.01, parseNumber(state.refPrice, DEFAULT_STATE.refPrice));
 
@@ -82,6 +84,7 @@ export function sanitizeState(rawState = {}) {
 
   state.spread = Math.max(0, parseNumber(state.spread, 0));
   state.ipcaCal = parseNumber(state.ipcaCal, DEFAULT_STATE.ipcaCal);
+  state.selic = parseNumber(state.selic, DEFAULT_STATE.selic);
   state.ipca = parseNumber(state.ipca, DEFAULT_STATE.ipca);
   state.targetRate = parseNumber(state.targetRate, DEFAULT_STATE.targetRate);
   state.convMonths = Math.max(0, Math.round(parseNumber(state.convMonths, DEFAULT_STATE.convMonths)));

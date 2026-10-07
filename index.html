@@ -32,6 +32,9 @@
           <strong class="pos" id="topReturnNow">+0,00%</strong>
           <span class="sub-badge" id="topTirNow">TIR -- a.a.</span>
         </div>
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Alternar Modo Claro / Escuro" aria-label="Alternar Modo Claro / Escuro">
+          <span id="themeToggleIcon">☀️</span>
+        </button>
       </div>
     </div>
   </div>
@@ -63,6 +66,25 @@
        ========================================== -->
   <div class="tab-pane active" id="tab-posicao" role="tabpanel">
     <div class="kpi-grid" id="posKpis"></div>
+
+    <!-- CARD: ALOCAÇÃO E DIVERSIFICAÇÃO (DONUT CHART) -->
+    <div class="card">
+      <div class="card-header">
+        <div>
+          <h2>Alocação & Diversificação da Carteira</h2>
+          <div class="desc">Distribuição percentual do patrimônio líquido acumulado.</div>
+        </div>
+        <div class="btn-group">
+          <select id="allocationModeSelect" class="btn btn-secondary btn-sm">
+            <option value="indexer">Por Indexador (IPCA / Selic / Pré)</option>
+            <option value="lots">Por Lote de Compra</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-wrapper compact" style="height: 220px; position: relative;">
+        <canvas id="allocationChart"></canvas>
+      </div>
+    </div>
 
     <div class="card">
       <div class="card-header">
@@ -273,6 +295,7 @@
         <strong>Leitura das Curvas:</strong>
         • <strong>Linha Branca Tracejada (Carrego Puro):</strong> valor que você acumularia rendendo a taxa de compra de cada lote (sem ganho/perda de marcação a mercado).<br>
         • <strong>Linha Azul (Cenário Alvo):</strong> valor real se a taxa atingir a projeção configurada no simulador.<br>
+        • <strong>Linha Roxa Pontilhada (Benchmark 100% CDI):</strong> rendimento alternativo de referência aplicando o saldo líquido de hoje a 100% do CDI.<br>
         • <strong>Linha Verde (Queda 5%):</strong> valorização antecipada máxima proporcionada pela marcação a mercado.<br>
         • <strong>Linha Vermelha (Estresse 8%):</strong> efeito temporário de desvalorização se as taxas do país subirem.
       </div>
@@ -321,6 +344,20 @@
       </div>
 
       <div class="form-grid">
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label>Título Público de Referência</label>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <select id="cfgBondSelect" style="flex:1;min-width:220px;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:var(--radius-sm);background:var(--bg-card);color:var(--text-primary);font-size:14px;">
+            </select>
+            <button type="button" class="btn btn-secondary btn-sm" id="btnSyncTreasury">
+              🔄 Sincronizar Cotação
+            </button>
+          </div>
+          <div style="font-size:11px;color:var(--text-muted);margin-top:4px;" id="syncTreasuryStatus">
+            Selecione um título para aplicar as cotações e taxas de fechamento.
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Data de Referência (Hoje)</label>
           <input type="date" id="cfgRefDate">
@@ -338,8 +375,13 @@
           <input type="number" step="0.01" id="cfgSpread" placeholder="0.00">
         </div>
         <div class="form-group">
-          <label>IPCA da Calibração (Última Compra até Hoje, % a.a.)</label>
+          <label>IPCA da Calibração (Última Compra até Hoje, % a.a.) <span id="syncIpcaStatus" style="font-size: 11px; margin-left: 8px;">🔄 Sincronizando...</span></label>
           <input type="number" step="0.1" id="cfgIpcaCal" value="4.5">
+        </div>
+
+        <div class="form-group" style="grid-column: 1 / -1;">
+          <label>Chave API brapi.dev (Opcional · Permite cotar todos os títulos ao vivo via REST)</label>
+          <input type="password" id="cfgBrapiToken" placeholder="Cole seu token aqui (opcional)..." style="font-family:monospace;font-size:13px;">
         </div>
       </div>
 

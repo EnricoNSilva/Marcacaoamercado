@@ -12,11 +12,14 @@ export const DEFAULT_LOTS = [
 
 export const DEFAULT_STATE = {
   // Calibração e Mercado Hoje
+  selectedBond: 'tesouro-renda-mais-2065',
+  brapiToken: '',
   refDate: '2026-10-05',
   refPrice: 243.38,
   refRate: '',        // Vazio para estimar automaticamente (~6,55% a.a.)
   spread: 0.0,        // Spread compra/venda em p.p.
   ipcaCal: 4.5,       // IPCA histórico recente da última compra até hoje (% a.a.)
+  selic: 10.75,       // Taxa Selic / CDI de referência (% a.a.) para benchmark
 
   // Parâmetros de Projeção Futura
   ipca: 4.5,          // IPCA projetado para o futuro (% a.a.)

@@ -10,3 +10,4 @@ export * from './scenario.js';
 export * from './taxes.js';
 export * from './portfolio.js';
 export * from './metrics.js';
+export * from './api.js';

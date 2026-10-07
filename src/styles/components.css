@@ -408,7 +408,7 @@ table.data-table td input {
   transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
-  border-color: #182238 transparent transparent transparent;
+  border-color: var(--bg-elevated) transparent transparent transparent;
 }
 
 /* Alinhamento inteligente dentro dos cards KPI (para não vazar à direita) */
@@ -442,3 +442,32 @@ table.data-table td input {
     transform: translateY(0);
   }
 }
+
+/* Botão de Alternância de Tema (Dark / Light Mode) */
+.theme-toggle-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-primary);
+  border-radius: var(--radius-pill);
+  width: 36px;
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: transform var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+  flex-shrink: 0;
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  background: var(--bg-elevated);
+  border-color: var(--brand-primary);
+  transform: scale(1.08);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.95);
+}
+
