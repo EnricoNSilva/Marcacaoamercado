@@ -98,7 +98,9 @@ export function createSettingsView(store) {
           let icon = '✅';
           
           if (res.fetchMode === 'custom') {
-            sourceText = 'API Tesouro Transparente (Hoje)';
+            const apiDate = res.results[0]?.baseDate;
+            const apiDateFmt = apiDate ? apiDate.split('-').reverse().join('/') : 'Ontem';
+            sourceText = `API Tesouro Transparente (Ref. ${apiDateFmt})`;
           } else if (res.fetchMode === 'token') {
             sourceText = 'brapi.dev ao vivo (Token Válido)';
           } else if (res.fetchMode === 'sandbox') {
