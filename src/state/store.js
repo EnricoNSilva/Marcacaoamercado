@@ -114,7 +114,11 @@ export function createStore(initialState = null, options = {}) {
     const posLucroApp = posRes.liqApp - posRes.custo;
     const posLucroReal = posRes.liqReal - posRes.custo;
     const posReturnPct = calcReturnPct(posRes.liqApp, posRes.custo);
+    const posReturnPctReal = calcReturnPct(posRes.liqReal, posRes.custo);
     const posRealReturnPct = calcRealReturn(posReturnPct, (state.ipcaCal / 100));
+    const posAvgRate = posRes.q > 0
+      ? (posRes.parts.reduce((acc, p) => acc + (p.lot.rate * p.q), 0) / posRes.q)
+      : 0;
 
     // Fluxos para TIR atual
     const posCashFlows = state.lots.map(l => ({
@@ -209,7 +213,9 @@ export function createStore(initialState = null, options = {}) {
       posLucroApp,
       posLucroReal,
       posReturnPct,
+      posReturnPctReal,
       posRealReturnPct,
+      posAvgRate,
       posTIR,
       simDN,
       rateAtSale,

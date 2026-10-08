@@ -32,8 +32,22 @@ describe("UI & IHC: Balões Explicativos e Cards de KPI (Fase 4)", () => {
     expect(GLOSSARY.puResgate).toBeDefined();
     expect(GLOSSARY.saldoBruto).toBeDefined();
     expect(GLOSSARY.saldoLiqReal).toBeDefined();
+    expect(GLOSSARY.taxaMediaCompra).toBeDefined();
     expect(GLOSSARY.carregoPuro).toBeDefined();
     expect(GLOSSARY.marcacaoMercado).toBeDefined();
     expect(GLOSSARY.duration).toBeDefined();
+  });
+
+  it("renderiza KPI card de Taxa Média de Compra com tooltip do glossário", () => {
+    const cardHtml = renderKpiCard({
+      label: "Taxa Média de Compra",
+      value: "IPCA + 5,86%",
+      sub: "Mercado hoje: IPCA + 6,37%",
+      tooltipKey: "taxaMediaCompra",
+    });
+
+    expect(cardHtml).toContain("Taxa Média de Compra");
+    expect(cardHtml).toContain("IPCA + 5,86%");
+    expect(cardHtml).toContain(GLOSSARY.taxaMediaCompra);
   });
 });

@@ -49,18 +49,22 @@ export function createPositionView(store) {
   function render(state, computed) {
     const {
       posRes,
-      posLucroApp,
-      posReturnPct,
+      posLucroReal,
+      posReturnPctReal,
       posRealReturnPct,
+      posAvgRate,
       posTIR,
-      pNow
+      pNow,
+      rNow
     } = computed;
 
     // 1. Renderiza KPIs com Tooltips (?) e Rentabilidade %
     if (kpisContainer) {
       const avgPrice = posRes.q > 0 ? (posRes.custo / posRes.q) : 0;
-      const lucroSign = posLucroApp >= 0 ? '+' : '';
-      const lucroClass = posLucroApp >= 0 ? 'pos' : 'neg';
+      const lucroRealSign = posLucroReal >= 0 ? '+' : '';
+      const lucroRealClass = posLucroReal >= 0 ? 'pos' : 'neg';
+      const returnRealSign = posReturnPctReal >= 0 ? '+' : '';
+      const irTotal = posRes.bruto - posRes.liqApp;
 
       kpisContainer.innerHTML =
         renderKpiCard({
@@ -76,30 +80,29 @@ export function createPositionView(store) {
           tooltipKey: 'saldoBruto'
         }) +
         renderKpiCard({
-          label: 'Saldo Líquido (App)',
-          value: fmtBRL(posRes.liqApp),
-          sub: `Lucro ${lucroSign}${fmtBRL(posLucroApp)}`,
-          valClass: lucroClass,
-          tooltipKey: 'saldoLiqApp'
-        }) +
-        renderKpiCard({
-          label: 'Rentabilidade Líquida %',
-          value: `${lucroSign}${fmtPct(posReturnPct)}`,
-          sub: `TIR ≈ ${fmtPct(posTIR)} a.a. · Real: ${fmtPct(posRealReturnPct)}`,
-          valClass: lucroClass,
-          tooltipKey: 'rentabilidadeLiq'
+          label: 'Taxa Média de Compra',
+          value: `IPCA + ${fmtPct(posAvgRate / 100)}`,
+          sub: `Mercado hoje: IPCA + ${fmtPct(rNow)}`,
+          tooltipKey: 'taxaMediaCompra'
         }) +
         renderKpiCard({
           label: 'Líquido Real (pós Custódia)',
           value: fmtBRL(posRes.liqReal),
-          sub: `Custódia B3 retida: ${fmtBRL(posRes.cust)}`,
-          valClass: 'pos',
+          sub: `Lucro Líquido: ${lucroRealSign}${fmtBRL(posLucroReal)} (após IR e B3)`,
+          valClass: lucroRealClass,
           tooltipKey: 'saldoLiqReal'
         }) +
         renderKpiCard({
+          label: 'Rentabilidade Líquida %',
+          value: `${returnRealSign}${fmtPct(posReturnPctReal)}`,
+          sub: `TIR ≈ ${fmtPct(posTIR)} a.a. · Real: ${fmtPct(posRealReturnPct)}`,
+          valClass: lucroRealClass,
+          tooltipKey: 'rentabilidadeLiq'
+        }) +
+        renderKpiCard({
           label: 'IR Total Retido',
-          value: fmtBRL(posRes.bruto - posRes.liqApp),
-          sub: 'Alíquotas de 20% a 22,5%',
+          value: fmtBRL(irTotal),
+          sub: `Alíquotas 20%–22,5% · Custódia B3: ${fmtBRL(posRes.cust)}`,
           tooltipKey: 'irRetido'
         });
     }
@@ -162,8 +165,8 @@ export function createPositionView(store) {
       totalRow.className = 'total-row';
       totalRow.innerHTML = `
         <td data-label="Resumo">Total</td>
-        <td data-label="Taxa Média">--</td>
-        <td data-label="Preço Médio">--</td>
+        <td data-label="Taxa Média">IPCA + ${fmtPct(posAvgRate / 100)}</td>
+        <td data-label="Preço Médio">${fmtBRL(avgPrice)}</td>
         <td data-label="Qtd. Total">${fmtNum(posRes.q)}</td>
         <td data-label="Investido Total">${fmtBRL(posRes.custo)}</td>
         <td data-label="Dias">--</td>
