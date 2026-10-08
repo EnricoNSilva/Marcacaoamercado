@@ -58,9 +58,10 @@ export function createPositionView(store) {
       rNow
     } = computed;
 
+    const avgPrice = posRes.q > 0 ? (posRes.custo / posRes.q) : 0;
+
     // 1. Renderiza KPIs com Tooltips (?) e Rentabilidade %
     if (kpisContainer) {
-      const avgPrice = posRes.q > 0 ? (posRes.custo / posRes.q) : 0;
       const lucroRealSign = posLucroReal >= 0 ? '+' : '';
       const lucroRealClass = posLucroReal >= 0 ? 'pos' : 'neg';
       const returnRealSign = posReturnPctReal >= 0 ? '+' : '';
